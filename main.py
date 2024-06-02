@@ -1,19 +1,19 @@
-from cProfile import label
 import tkinter as tk
 from tkinter import BOTH, E, N, S, W, ttk
 from components import *
 
-frame_list = [StartPage, LoginPage]
+frame_list = [StartPage, LoginPage, SignUp]
 
 
 class MainApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.title("Book Online Shop")
         self.geometry("600x400")
 
         # Create a container frame
         container = ttk.Frame(self)
-        container.pack()
+        container.place(relx=0.5, rely=0.5, anchor="center")
 
         # Dictionary to hold the different frames
         self.frames = {}
@@ -26,12 +26,6 @@ class MainApplication(tk.Tk):
             frame.grid(row=0, column=0, sticky=(N, W, E, S))
 
         # Show the initial frame
-        self.prev = "StartPage"
-        label = ttk.Button(
-            self, text="back", command=lambda: self.show_frame(self.prev)
-        )
-        label.place(x=0, y=0)
-
         self.show_frame("StartPage")
 
     def show_frame(self, page_name):

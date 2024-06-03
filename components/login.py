@@ -5,7 +5,7 @@ from tkinter import E, W, StringVar, ttk
 from traceback import print_tb
 
 
-class LoginPage(ttk.Frame):
+class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
@@ -53,7 +53,7 @@ class LoginPage(ttk.Frame):
         button2.grid(row=3, column=0, padx=10, pady=10)
 
         # sign up button
-        button2 = ttk.Button(self, text="SignUp", style="W.TButton",command=lambda: controller.show_frame("SignUp"))
+        button2 = ttk.Button(self, text="SignUp", style="W.TButton",command=lambda: controller.show_frame("SignUpPage"))
         button2.grid(row=4, column=0, padx=10, pady=10)
 
     def sign_in(self):

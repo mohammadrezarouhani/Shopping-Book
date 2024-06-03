@@ -1,115 +1,153 @@
 from cgitb import text
 from logging import PlaceHolder
+from os import name
 import tkinter as tk
-from tkinter import E, W, StringVar, ttk
+from tkinter import E, W, Button, Entry, Label, LabelFrame, StringVar, ttk
+from tkinter.tix import Select
 from traceback import print_tb
 
+from .datetime_entry import DateEntry
 
-class SignUp(ttk.Frame):
+
+class SignUpPage(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
-        self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=1)
-
         style = ttk.Style()
         style.configure(
-            "W.TButton",
-            font=("calibri", 10, "bold"),
+            "W.Button",
+            font=("calibri", 50, "bold"),
             foreground="black",
             borderwidth="1",
+            padding="2",
         )
 
-        label = ttk.Label(
-            self,
-            text="SignUp",
-            font=("arial", 14),
+        credential_frame = LabelFrame(
+            self, text="Credentials", font=("Arial", 14, "bold")
         )
-        label.grid(row=0, column=0, padx=10, pady=30)
+        credential_frame.pack(fill="x", expand="yes")
+        credential_frame.columnconfigure(0, weight=0)
+        credential_frame.columnconfigure(1, weight=1)
+        credential_frame.columnconfigure(2, weight=0)
+        credential_frame.columnconfigure(3, weight=1)
 
-        # username label
-        label = ttk.Label(
-            self,
-            text="username",
-            font=("arial", 12),
+        # username
+        username_label = Label(credential_frame, text="username", width=10)
+        username_entry = Entry(
+            credential_frame,
         )
-        label.grid(row=1, column=0, padx=10, pady=30)
+        username_label.grid(row=0, column=0)
+        username_entry.grid(row=0, column=1, pady=5)
 
-        # username entry
-        self.username_state = StringVar()
-        username_input = ttk.Entry(
-            self,
-            textvariable=self.username_state,
-            style="W.TButton",
+        # password
+        pass_label = Label(credential_frame, text="password", width=10)
+        pass_entry = Entry(
+            credential_frame,
         )
+        pass_label.grid(row=1, column=0)
+        pass_entry.grid(row=1, column=1, pady=5)
 
-        username_input.grid(row=1, column=1, padx=10, pady=10)
-
-        ### password label
-        label = ttk.Label(
-            self,
-            text="password",
-            font=("arial", 12),
+        # password retype
+        re_pass_label = Label(credential_frame, text="password retype", width=15)
+        re_pass_entry = Entry(
+            credential_frame,
         )
-        label.grid(row=2, column=0, padx=10, pady=30)
+        re_pass_label.grid(row=1, column=2)
+        re_pass_entry.grid(row=1, column=3, pady=5)
 
-        # password input
-        self.password_state = StringVar()
-        pass_input = ttk.Entry(
-            self,
-            textvariable=self.password_state,
-            style="W.TButton",
+        ## name frame
+        name_frame = LabelFrame(self, text="FullName", font=("Arial", 14, "bold"))
+        name_frame.pack(expand="yes", fill="x")
+        name_frame.columnconfigure(0, weight=0)
+        name_frame.columnconfigure(1, weight=1)
+        name_frame.columnconfigure(2, weight=0)
+        name_frame.columnconfigure(3, weight=1)
+
+        # first name
+        firstname_label = Label(name_frame, text="firstname", width=10)
+        firstname_entry = Entry(
+            name_frame,
         )
-        pass_input.grid(row=2, column=1, padx=10, pady=10)
+        firstname_label.grid(row=0, column=0)
+        firstname_entry.grid(row=0, column=1, pady=5)
 
-        # password label
-        label = ttk.Label(
-            self,
-            text="password Retype",
-            font=("arial", 12),
+        # last name
+        lastname_label = Label(name_frame, text="lastname", width=10)
+        lastname_entry = Entry(
+            name_frame,
         )
-        label.grid(row=2, column=2, padx=10, pady=30)
+        lastname_label.grid(row=0, column=2)
+        lastname_entry.grid(row=0, column=3, pady=5)
 
-        # password input
-        self.password_retype_state = StringVar()
-        pass_input = ttk.Entry(
-            self,
-            textvariable=self.password_retype_state,
-            style="W.TButton",
+        # address frame
+        address_frame = LabelFrame(
+            self, text="Addres Detail", font=("Arial", 14, "bold")
         )
-        pass_input.grid(row=2, column=2, padx=10, pady=10)
+        address_frame.pack(fill="x", expand="yes")
+        address_frame.columnconfigure(0, weight=0)
+        address_frame.columnconfigure(1, weight=1)
+        address_frame.columnconfigure(2, weight=0)
+        address_frame.columnconfigure(3, weight=1)
 
-        # password label
-        label = ttk.Label(
-            self,
-            text="password",
-            font=("arial", 14),
+        # address
+        address_label = Label(address_frame, text="address", width=10)
+        address_entry = Entry(
+            address_frame,
         )
-        label.grid(row=2, column=0, padx=10, pady=30)
+        address_label.grid(row=0, column=0)
+        address_entry.grid(row=0, column=1, pady=5)
 
-        # password input
-        self.password_state = StringVar()
-        pass_input = ttk.Entry(
-            self,
-            textvariable=self.password_state,
-            style="W.TButton",
+        # city
+        city_label = Label(address_frame, text="city", width=10)
+        city_entry = Entry(
+            address_frame,
         )
-        pass_input.grid(row=2, column=1, padx=10, pady=10)
+        city_label.grid(row=0, column=2)
+        city_entry.grid(row=0, column=3, pady=5)
 
-        # signin button
-        button2 = ttk.Button(
-            self, text="SignIn", style="W.TButton", command=self.sign_in
+        # state
+        state_label = Label(address_frame, text="state", width=10)
+        state_entry = Entry(
+            address_frame,
         )
-        button2.grid(row=3, column=0, padx=10, pady=10)
+        state_label.grid(row=1, column=0)
+        state_entry.grid(row=1, column=1, pady=5)
 
-        # sign up button
-        button2 = ttk.Button(
-            self,
-            text="SignUp",
-            style="W.TButton",
-            command=lambda: controller.show_frame("SignUp"),
+        # zip code
+        zip_label = Label(address_frame, text="Credit Card", width=10)
+        zip_entry = Entry(
+            address_frame,
         )
-        button2.grid(row=4, column=0, padx=10, pady=10)
+        zip_label.grid(row=1, column=2)
+        zip_entry.grid(row=1, column=3, pady=5)
 
-    def sign_in(self):
-        print("signed in ...")
+        # credit card frame
+        credit_frame = LabelFrame(
+            self, text="Credit Card Detail", font=("Arial", 14, "bold")
+        )
+        credit_frame.pack(fill="x", expand="yes")
+        credit_frame.columnconfigure(0, weight=0)
+        credit_frame.columnconfigure(1, weight=1)
+        credit_frame.columnconfigure(2, weight=0)
+        credit_frame.columnconfigure(3, weight=1)
+
+        # credit card type
+        type_label = Label(credit_frame, text="Card Type")
+        type_var = tk.StringVar()
+        type_select = ttk.Combobox(credit_frame, width=15, textvariable=type_var)
+        type_label.grid(row=0, column=0)
+        type_select.grid(row=0, column=1, pady=5)
+
+        # zip code
+        card_num_label = Label(credit_frame, text="Credit Number", width=12)
+        card_num_entry = Entry(credit_frame)
+        card_num_label.grid(row=0, column=2)
+        card_num_entry.grid(row=0, column=3, pady=5)
+
+        datetime_entry = DateEntry(credit_frame)
+        datetime_entry.grid(row=0, column=4)
+
+        submit_button = Button(
+            self, text="SignUp", background="white", foreground="green"
+        )
+        submit_button.pack(fill="x", expand="yes", padx=200)

@@ -1,7 +1,7 @@
 from cgitb import text
 from logging import PlaceHolder
 import tkinter as tk
-from tkinter import E, W, StringVar, ttk
+from tkinter import E, W, Button, Entry, Frame, Label, StringVar, ttk
 from traceback import print_tb
 
 
@@ -9,52 +9,57 @@ class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
-        self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-        style = ttk.Style()
-        style.configure(
-            "W.TButton",
-            font=("calibri", 10, "bold"),
-            foreground="black",
-            borderwidth="1",
-        )
-
-        label = ttk.Label(
+        label = Label(
             self,
             text="SignIn",
-            font=("arial", 14),
+            font=("arial", 14, "bold"),
         )
-        label.grid(row=0, column=0, padx=10, pady=30)
+        label.grid(row=0, column=0, pady=20)
 
-        # username entry
+        cred_frame = Frame(self)
+        cred_frame.grid(row=1, column=0)
+
+        # username
+        label = Label(cred_frame, text="username", font=("arial", 10, "bold"))
+        label.grid(row=0, column=0, pady=20)
         self.username_state = StringVar()
-        username_input = ttk.Entry(
-            self,
-            textvariable=self.username_state,
-            style="W.TButton",
+        username_input = Entry(
+            cred_frame, textvariable=self.username_state, width=25, font=("arial", 10)
         )
+        username_input.grid(row=0, column=1, padx=10, pady=10)
 
-        username_input.grid(row=1, column=0, padx=10, pady=10)
-
-        # password input
+        # password
+        label = Label(cred_frame, text="password", font=("arial", 10, "bold"))
+        label.grid(row=1, column=0, pady=20)
         self.password_state = StringVar()
-        pass_input = ttk.Entry(
-            self,
-            textvariable=self.password_state,
-            style="W.TButton",
+        pass_input = Entry(
+            cred_frame, textvariable=self.password_state, width=25, font=("arial", 10)
         )
-        pass_input.grid(row=2, column=0, padx=10, pady=10)
+        pass_input.grid(row=1, column=1, padx=10, pady=10)
 
         # signin button
-        button2 = ttk.Button(
-            self, text="SignIn", style="W.TButton", command=self.sign_in
+        button2 = Button(
+            self,
+            text="SignIn",
+            command=self.sign_in,
+            width=15,
+            background="white",
+            font=("arial", 10),
         )
         button2.grid(row=3, column=0, padx=10, pady=10)
 
         # sign up button
-        button2 = ttk.Button(self, text="SignUp", style="W.TButton",command=lambda: controller.show_frame("SignUpPage"))
-        button2.grid(row=4, column=0, padx=10, pady=10)
+        # button2 = Button(
+        #     self,
+        #     text="SignUp",
+        #     command=lambda: controller.show_frame("SignUpPage"),
+        #     width=15,
+        #     background="white",
+        #     font=("arial", 10),
+        # )
+        # button2.grid(row=4, column=0, padx=10, pady=10)
 
     def sign_in(self):
         print("signed in ...")

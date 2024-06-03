@@ -1,11 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter.font import BOLD
 
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
+        super().__init__(parent,background='lightblue')
         self.controller = controller
         self.columnconfigure(0, weight=1)
 
@@ -27,9 +26,11 @@ class StartPage(tk.Frame):
         guest_button = tk.Button(
             self,
             text="Continue AS Guest",
-            font=("calibri", 10, "bold"),
-            borderwidth=2,
+            font=("calibri", 12, "bold"),
+            borderwidth=4,
             command=lambda: controller.show_frame("BookListPage"),
+            width=25,
+            background="white"
         )
         guest_button.grid(row=1, column=0, padx=10, pady=10)
 
@@ -38,8 +39,10 @@ class StartPage(tk.Frame):
             self,
             text="SignIn",
             command=lambda: controller.show_frame("LoginPage"),
-            font=("calibri", 10, "bold"),
-            borderwidth=2,
+            font=("calibri", 12, "bold"),
+            borderwidth=4,
+            width=25,
+            background="white"
         )
         sign_in_button.grid(row=2, column=0, padx=10, pady=10)
 
@@ -47,8 +50,10 @@ class StartPage(tk.Frame):
         sign_up_button = tk.Button(
             self,
             text="SignUp",
-            font=("calibri", 10, "bold"),
-            borderwidth=2,
+            font=("calibri", 12, "bold"),
+            borderwidth=4,
             command=lambda: controller.show_frame("SignUpPage"),
+            width=25,
+            background="white"
         )
         sign_up_button.grid(row=3, column=0, padx=10, pady=10)

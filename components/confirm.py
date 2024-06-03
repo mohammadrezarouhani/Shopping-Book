@@ -14,15 +14,52 @@ from tkinter import (
     Scrollbar,
     ttk,
 )
-from turtle import width
 
 
-class ReportPage(tk.Frame):
+class ConfirmPage(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
+
+        # main label
+        main_label = Label(self, text="Confirm Order", font=("Arial", 16, "bold"))
+        main_label.pack(fill="x", expand=True)
+
+        top_frame = LabelFrame(self, text="Customer Detail", font=("Arial", 12, "bold"))
+        top_frame.pack(fill="x", expand=True)
+        top_frame.columnconfigure(0, weight=1)
+        top_frame.columnconfigure(1, weight=1)
+
+        # address detail
+        addr_frame = Frame(top_frame)
+        addr_frame.grid(row=0, column=0)
+
+        cname_label = Label(addr_frame, text="<<customer_name>>")
+        cname_label.grid(row=1, column=0)
+
+        address_label = Label(addr_frame, text="<<address>>")
+        address_label.grid(row=2, column=0)
+
+        city_label = Label(addr_frame, text="<<city>>")
+        city_label.grid(row=3, column=0)
+
+        state_label = Label(addr_frame, text="<<state>>")
+        state_label.grid(row=4, column=0)
+
+        zcode_label = Label(addr_frame, text="<<zip_code>>")
+        zcode_label.grid(row=4, column=1)
+
+        # address detail
+        card_frame = Frame(top_frame)
+        card_frame.grid(row=0, column=1)
+
+        cname_label = Label(card_frame, text="credit card:")
+        cname_label.grid(row=0, column=0)
+
+        address_label = Label(card_frame, text="23423423423423")
+        address_label.grid(row=0, column=1)
 
         # creating a tree view
         tree_frame = Frame(self)
@@ -80,17 +117,57 @@ class ReportPage(tk.Frame):
         self.insert_book_item()
 
         # Search Frame
-        card_frame = LabelFrame(self, text="Card Detail")
+        card_frame = LabelFrame(self, text="Order Detail", font=("Arial", 12, "bold"))
         card_frame.pack(fill="x", expand="yes")
         card_frame.grid_columnconfigure(1, weight=1)
 
         # create card label
-        self.card_label = Label(card_frame, text="There is 0 Item in Shopping Card")
+        self.card_label = Label(
+            card_frame,
+            text="the book will be delivered within 5 days",
+            foreground="red",
+            font=("Arial", 10, "bold"),
+            background="lightblue",
+        )
         self.card_label.grid(row=0, column=0, padx=10, pady=10, columnspan=1)
 
+        # final price
+        price_frame = Frame(card_frame, background="white")
+        price_frame.grid(row=0, column=1, sticky="wnes")
+        ##
+        stotal_label = Label(price_frame, text="Sub Total Price:", background="white")
+        stotal_label.grid(row=0, column=0)
+        ##
+        ship_label = Label(price_frame, text="Shipping Price:", background="white")
+        ship_label.grid(row=1, column=0)
+        ##
+        total_label = Label(price_frame, text="Total Price:", background="white")
+        total_label.grid(row=2, column=0)
+        ##
+
+        # price values
+        stotal_label = Label(price_frame, text="24$", background="white")
+        stotal_label.grid(row=0, column=1)
+        ##
+        ship_label = Label(price_frame, text="5$", background="white")
+        ship_label.grid(row=1, column=1)
+        ##
+        total_label = Label(price_frame, text="29$", background="white")
+        total_label.grid(row=2, column=1)
+        ##
+
         # check Card
-        checkout_button = Button(card_frame, text="Proceed", background="white")
-        checkout_button.grid(row=0, column=1, sticky=E, padx=6)
+        update_button = Button(
+            card_frame,
+            text="Update Profile",
+            background="white",
+            command=lambda: controller.show_frame("UpdateProfile"),
+        )
+        update_button.grid(row=0, column=2, sticky=E, padx=6)
+
+        # check Card
+        checkout_button = Button(card_frame, text="Buy", background="white",command=lambda:controller.show_frame("FactorPage"))
+        checkout_button.grid(row=0, column=3, sticky=E, padx=6)
 
     def insert_book_item(self):
         for i in range(100):

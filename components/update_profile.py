@@ -7,7 +7,7 @@ from tkinter import  Button, Entry, Label, LabelFrame, StringVar, ttk
 from .datetime_entry import DateEntry
 
 
-class SignUpPage(tk.Frame):
+class UpdateProfile(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
@@ -19,6 +19,10 @@ class SignUpPage(tk.Frame):
             borderwidth="1",
             padding="2",
         )
+
+        # main label
+        main_label = Label(self, text="Update Profile", font=("Arial", 16, "bold"))
+        main_label.pack(fill="x", expand=True)
 
         credential_frame = LabelFrame(
             self, text="Credentials", font=("Arial", 14, "bold")
@@ -146,6 +150,10 @@ class SignUpPage(tk.Frame):
         datetime_entry.grid(row=0, column=4)
 
         submit_button = Button(
-            self, text="SignUp", background="white", foreground="green"
+            self, text="Update", background="white", foreground="green",command=self.update
         )
         submit_button.pack(fill="x", expand="yes", padx=200)
+
+
+    def update(self):
+        pass

@@ -2,8 +2,6 @@ from cgitb import text
 from functools import wraps
 from importlib.abc import ResourceReader
 from re import X
-from textwrap import fill
-import time
 import tkinter as tk
 from tkinter import (
     CENTER,
@@ -20,7 +18,6 @@ from tkinter import (
     Scrollbar,
     ttk,
 )
-from turtle import width
 
 
 class BookListPage(tk.Frame):
@@ -29,6 +26,10 @@ class BookListPage(tk.Frame):
         self.controller = controller
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
+
+        #main label
+        main_label=Label(self,text="Order Book",font=("Arial",16,"bold"))
+        main_label.pack(fill='x',expand=True)
 
         # Search Frame
         search_frame = LabelFrame(self, text="Input")

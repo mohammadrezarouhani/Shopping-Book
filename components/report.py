@@ -5,9 +5,8 @@ from re import X
 import tkinter as tk
 from tkinter import (
     CENTER,
-    E,
-    NO,
     RIGHT,
+    E,
     W,
     Y,
     Button,

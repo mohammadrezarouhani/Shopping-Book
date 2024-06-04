@@ -4,7 +4,7 @@ from tkinter import ttk
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, background="lightblue")
+        super().__init__(parent)
         self.controller = controller
         self.columnconfigure(0, weight=1)
 
@@ -88,7 +88,7 @@ class StartPage(tk.Frame):
             text="Report",
             font=("calibri", 12, "bold"),
             borderwidth=4,
-            command=lambda: controller.show_frame("SystemPage"),
+            command=lambda: controller.show_frame("ReportPage"),
             width=25,
             background="white",
         )

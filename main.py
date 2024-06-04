@@ -2,6 +2,7 @@ from email.mime import image
 import tkinter as tk
 from tkinter import E, N, S, W, Button, Frame, ttk
 from components import *
+import components
 
 # any page that we create should be registred here
 frame_list = [
@@ -16,6 +17,9 @@ frame_list = [
     ManageBookPage,
     SystemPage,
     ReportPage,
+    BookOrderPage,
+    UpdateBookPage,
+    InsertBookPage,
 ]
 
 
@@ -28,7 +32,8 @@ class MainApplication(tk.Tk):
         self.resizable(0, 0)
 
         # setting global style
-        style = ttk.Style()
+
+        style = ttk.Style(self)
         style.configure("Treeview", rowheight=40)
 
         # Create a container frame

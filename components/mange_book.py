@@ -18,6 +18,7 @@ from tkinter import (
     Scrollbar,
     ttk,
 )
+from tkinter import messagebox
 
 
 class ManageBookPage(tk.Frame):
@@ -27,9 +28,9 @@ class ManageBookPage(tk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-        #main label
-        main_label=Label(self,text="Manage",font=("Arial",16,"bold"))
-        main_label.pack(fill='x',expand=True)
+        # main label
+        main_label = Label(self, text="Manage Book Store", font=("Arial", 16, "bold"))
+        main_label.pack(fill="x", expand=True)
 
         # Search Frame
         search_frame = LabelFrame(self, text="Input")
@@ -38,28 +39,17 @@ class ManageBookPage(tk.Frame):
         search_frame.columnconfigure(1, weight=1)
         search_frame.columnconfigure(2, weight=1)
 
-        # create search label
+        # search label
         search_label = Label(
             search_frame, text="search by ISBN or title or author or publisher"
         )
         search_label.grid(row=0, column=0, padx=10, pady=10)
 
-        # create a entry labelo and biding text change event
+        #  a entry label and biding text change event
         self.text_var = tk.StringVar()
         self.text_var.trace_add("write", self.search)
         search_entry = Entry(search_frame, textvariable=self.text_var)
         search_entry.grid(row=0, column=1, padx=10, pady=10)
-        # search_entry.bind("<KeyRelease>", self.search)
-
-        # create add to card button
-        add_to_button = Button(
-            search_frame,
-            text="Add to Card",
-            width=10,
-            background="white",
-            command=self.add_to_card,
-        )
-        add_to_button.grid(row=0, column=2, sticky=W)
 
         # creating a tree view
         tree_frame = Frame(self)
@@ -121,21 +111,43 @@ class ManageBookPage(tk.Frame):
         card_frame.pack(fill="x", expand="yes")
         card_frame.grid_columnconfigure(1, weight=1)
 
-        # create card label
+        #  card label
         self.card_label = Label(card_frame, text="There is 0 Item in Shopping Card")
         self.card_label.grid(row=0, column=0, padx=10, pady=10, columnspan=1)
+
+        #  add button
+        add_to_button = Button(
+            card_frame,
+            text="Add",
+            width=10,
+            background="white",
+            command=lambda:controller.show_frame("InsertBookPage"),
+        )
+        add_to_button.grid(row=0, column=1, sticky=E)
 
         # checkout Card
         checkout_button = Button(
             card_frame,
-            text="Checkout",
+            text="Modify",
             background="white",
-            command=lambda: self.controller.show_frame("ShoppingCardPage"),
+            command=lambda: self.controller.show_frame("UpdateBookPage"),
         )
-        checkout_button.grid(row=0, column=1, sticky=E, padx=6)
+        checkout_button.grid(row=0, column=3, sticky=E, padx=6)
+
+
+        #  delete button
+        add_to_button = Button(
+            card_frame,
+            text="Delete",
+            width=10,
+            background="white",
+            command=self.delete_book,
+        )
+        add_to_button.grid(row=0, column=2, sticky=E)
+
 
     def insert_book_item(self):
-        for i in range(100):
+        for i in range(5):
             if i % 2 == 0:
                 self.book_tree.insert(
                     parent="",
@@ -182,3 +194,12 @@ class ManageBookPage(tk.Frame):
     def remove_from_tree(self):
         for record in self.book_tree.get_children():
             self.book_tree.delete(record)
+
+    def delete_book(self):
+        selection=self.book_tree.selection()
+
+        for item in selection:
+            item_values = self.book_tree.item(item, "values")
+            
+        if messagebox.askquestion("askquestion", f"Are you sure deleting {len(selection)} item?")=='yes':
+            print('deleted')

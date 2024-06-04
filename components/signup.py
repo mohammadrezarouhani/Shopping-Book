@@ -11,17 +11,12 @@ class SignUpPage(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
-        style = ttk.Style()
-        style.configure(
-            "W.Button",
-            font=("calibri", 50, "bold"),
-            foreground="black",
-            borderwidth="1",
-            padding="2",
-        )
+        
+        main_label=Label(self,text="SignUp",font=("Arial",16,"bold"))
+        main_label.pack(fill='x',expand=True)
 
-        credential_frame = LabelFrame(
-            self, text="Credentials", font=("Arial", 14, "bold")
+        credential_frame = LabelFrame(  
+            self, text="Credentials", font=("Arial", 12, "bold")
         )
         credential_frame.pack(fill="x", expand="yes")
         credential_frame.columnconfigure(0, weight=0)
@@ -54,7 +49,7 @@ class SignUpPage(tk.Frame):
         re_pass_entry.grid(row=1, column=3, pady=5)
 
         ## name frame
-        name_frame = LabelFrame(self, text="FullName", font=("Arial", 14, "bold"))
+        name_frame = LabelFrame(self, text="FullName", font=("Arial", 12, "bold"))
         name_frame.pack(expand="yes", fill="x")
         name_frame.columnconfigure(0, weight=0)
         name_frame.columnconfigure(1, weight=1)
@@ -79,7 +74,7 @@ class SignUpPage(tk.Frame):
 
         # address frame
         address_frame = LabelFrame(
-            self, text="Addres Detail", font=("Arial", 14, "bold")
+            self, text="Addres Detail", font=("Arial", 12, "bold")
         )
         address_frame.pack(fill="x", expand="yes")
         address_frame.columnconfigure(0, weight=0)
@@ -121,7 +116,7 @@ class SignUpPage(tk.Frame):
 
         # credit card frame
         credit_frame = LabelFrame(
-            self, text="Credit Card Detail", font=("Arial", 14, "bold")
+            self, text="Credit Card Detail", font=("Arial", 12, "bold")
         )
         credit_frame.pack(fill="x", expand="yes")
         credit_frame.columnconfigure(0, weight=0)

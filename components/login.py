@@ -14,7 +14,7 @@ class LoginPage(tk.Frame):
         label = Label(
             self,
             text="SignIn",
-            font=("arial", 14, "bold"),
+            font=("arial", 16, "bold"),
         )
         label.grid(row=0, column=0, pady=20)
 
@@ -22,20 +22,20 @@ class LoginPage(tk.Frame):
         cred_frame.grid(row=1, column=0)
 
         # username
-        label = Label(cred_frame, text="username", font=("arial", 10, "bold"))
+        label = Label(cred_frame, text="username", font=("arial", 12, "bold"))
         label.grid(row=0, column=0, pady=20)
         self.username_state = StringVar()
         username_input = Entry(
-            cred_frame, textvariable=self.username_state, width=25, font=("arial", 10)
+            cred_frame, textvariable=self.username_state, width=25, font=("arial", 12)
         )
         username_input.grid(row=0, column=1, padx=10, pady=10)
 
         # password
-        label = Label(cred_frame, text="password", font=("arial", 10, "bold"))
+        label = Label(cred_frame, text="password", font=("arial", 12, "bold"))
         label.grid(row=1, column=0, pady=20)
         self.password_state = StringVar()
         pass_input = Entry(
-            cred_frame, textvariable=self.password_state, width=25, font=("arial", 10)
+            cred_frame, textvariable=self.password_state, width=25, font=("arial", 12)
         )
         pass_input.grid(row=1, column=1, padx=10, pady=10)
 
@@ -46,9 +46,9 @@ class LoginPage(tk.Frame):
             command=self.sign_in,
             width=15,
             background="white",
-            font=("arial", 10),
+            font=("arial", 12),
         )
-        button2.grid(row=3, column=0, padx=10, pady=10)
+        button2.grid(row=3, column=0, padx=200, pady=10,sticky="e")
 
         # sign up button
         # button2 = Button(

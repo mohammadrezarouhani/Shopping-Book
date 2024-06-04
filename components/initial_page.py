@@ -4,7 +4,7 @@ from tkinter import ttk
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent,background='lightblue')
+        super().__init__(parent, background="lightblue")
         self.controller = controller
         self.columnconfigure(0, weight=1)
 
@@ -30,7 +30,7 @@ class StartPage(tk.Frame):
             borderwidth=4,
             command=lambda: controller.show_frame("BookListPage"),
             width=25,
-            background="white"
+            background="white",
         )
         guest_button.grid(row=1, column=0, padx=10, pady=10)
 
@@ -42,7 +42,7 @@ class StartPage(tk.Frame):
             font=("calibri", 12, "bold"),
             borderwidth=4,
             width=25,
-            background="white"
+            background="white",
         )
         sign_in_button.grid(row=2, column=0, padx=10, pady=10)
 
@@ -54,6 +54,55 @@ class StartPage(tk.Frame):
             borderwidth=4,
             command=lambda: controller.show_frame("SignUpPage"),
             width=25,
-            background="white"
+            background="white",
         )
         sign_up_button.grid(row=3, column=0, padx=10, pady=10)
+
+        #mange book
+        sign_up_button = tk.Button(
+            self,
+            text="Manage Book Store",
+            font=("calibri", 12, "bold"),
+            borderwidth=4,
+            command=lambda: controller.show_frame("ManageBookPage"),
+            width=25,
+            background="white",
+        )
+        sign_up_button.grid(row=4, column=0, padx=10, pady=10)
+
+        # manage orders
+        sign_up_button = tk.Button(
+            self,
+            text="Mage Book Orders",
+            font=("calibri", 12, "bold"),
+            borderwidth=4,
+            command=lambda: controller.show_frame("BookOrderPage"),
+            width=25,
+            background="white",
+        )
+        sign_up_button.grid(row=5, column=0, padx=10, pady=10)
+
+        # reports
+        sign_up_button = tk.Button(
+            self,
+            text="Report",
+            font=("calibri", 12, "bold"),
+            borderwidth=4,
+            command=lambda: controller.show_frame("SystemPage"),
+            width=25,
+            background="white",
+        )
+        sign_up_button.grid(row=6, column=0, padx=10, pady=10)
+
+
+        # system maintanance
+        sign_up_button = tk.Button(
+            self,
+            text="System Maintanace",
+            font=("calibri", 12, "bold"),
+            borderwidth=4,
+            command=lambda: controller.show_frame("SystemPage"),
+            width=25,
+            background="white",
+        )
+        sign_up_button.grid(row=7, column=0, padx=10, pady=10)

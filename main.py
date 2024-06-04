@@ -1,12 +1,25 @@
 from email.mime import image
 import tkinter as tk
-from tkinter import E, N, S, W, Button, Frame, Label, PhotoImage, ttk
+from tkinter import E, N, S, W, Button, Frame, ttk
 from components import *
 
-frame_list = [StartPage, LoginPage, SignUpPage,
-              BookListPage, ShoppingCardPage, ConfirmPage,UpdateProfile,FactorPage]
+# any page that we create should be registred here
+frame_list = [
+    StartPage,
+    LoginPage,
+    SignUpPage,
+    BookListPage,
+    ShoppingCardPage,
+    ConfirmPage,
+    UpdateProfile,
+    FactorPage,
+    ManageBookPage,
+    SystemPage,
+    ReportPage,
+]
 
 
+# main window runner
 class MainApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -14,26 +27,24 @@ class MainApplication(tk.Tk):
         self.geometry("650x550")
         self.resizable(0, 0)
 
-        # setting global Treeview style
+        # setting global style
         style = ttk.Style()
         style.configure("Treeview", rowheight=40)
 
-        style.configure("Button", font=("Arial", 18))
-
         # Create a container frame
-        container = Frame(self,background="lightblue")
+        container = Frame(self, background="lightblue")
         container.pack(fill="both", expand=True)
         container.columnconfigure(0, weight=1)
         container.rowconfigure(0, weight=0)
         container.rowconfigure(1, weight=1)
 
         # tool bar
-        toolbar = Frame(container, height=5,background="lightblue")
+        toolbar = Frame(container, height=5, background="lightblue")
         toolbar.grid(row=0, column=0, padx=5, pady=5)
-        
+
         initil_page_button = Button(
             toolbar,
-            text="Initial Page",
+            text="main Page",
             background="white",
             foreground="green",
             command=lambda: self.show_frame("StartPage"),
@@ -42,7 +53,7 @@ class MainApplication(tk.Tk):
 
         search_page_button = Button(
             toolbar,
-            text="Search Page",
+            text="Book List",
             background="white",
             foreground="green",
             command=lambda: self.show_frame("BookListPage"),

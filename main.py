@@ -2,7 +2,6 @@ from email.mime import image
 import tkinter as tk
 from tkinter import E, N, S, W, Button, Frame, ttk
 from components import *
-import components
 
 # any page that we create should be registred here
 frame_list = [

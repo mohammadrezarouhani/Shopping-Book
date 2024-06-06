@@ -73,7 +73,7 @@ class StartPage(tk.Frame):
         # manage orders
         sign_up_button = tk.Button(
             self,
-            text="Mage Book Orders",
+            text="Manage Book Orders",
             font=("calibri", 12, "bold"),
             borderwidth=4,
             command=lambda: controller.show_frame("BookOrderPage"),

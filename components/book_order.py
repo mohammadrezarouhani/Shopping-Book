@@ -5,12 +5,9 @@ from re import X
 import tkinter as tk
 from tkinter import (
     CENTER,
-    E,
     NO,
     RIGHT,
-    W,
     Y,
-    Button,
     Entry,
     Frame,
     Label,
@@ -105,6 +102,8 @@ class BookOrderPage(tk.Frame):
         # set tree tags
         self.book_tree.tag_configure("odd", background="white")
         self.book_tree.tag_configure("even", background="lightblue")
+        self.book_tree.tag_configure("submitted", background="green")
+        self.book_tree.tag_configure("dismissed", background="red")
 
         # insert inital data
         self.insert_order_item()
@@ -115,11 +114,13 @@ class BookOrderPage(tk.Frame):
         card_frame.grid_columnconfigure(1, weight=1)
 
         # create card label
-        self.card_label = Label(card_frame, text="There is 0 Order in a Way",foreground="green")
+        self.card_label = Label(
+            card_frame, text="There is 0 Order in a Way", foreground="green"
+        )
         self.card_label.grid(row=0, column=0, padx=10, pady=10, columnspan=1)
 
     def insert_order_item(self):
-        for i in range(100):
+        for i in range(10):
             if i % 2 == 0:
                 self.book_tree.insert(
                     parent="",

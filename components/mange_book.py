@@ -1,14 +1,11 @@
-from cgitb import text
-from functools import wraps
 from importlib.abc import ResourceReader
-from re import X
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import (
     CENTER,
     E,
     NO,
     RIGHT,
-    W,
     Y,
     Button,
     Entry,
@@ -18,7 +15,7 @@ from tkinter import (
     Scrollbar,
     ttk,
 )
-from tkinter import messagebox
+# from tkinter import messagebox
 
 
 class ManageBookPage(tk.Frame):
@@ -198,8 +195,6 @@ class ManageBookPage(tk.Frame):
     def delete_book(self):
         selection=self.book_tree.selection()
 
-        for item in selection:
-            item_values = self.book_tree.item(item, "values")
-            
-        if messagebox.askquestion("askquestion", f"Are you sure deleting {len(selection)} item?")=='yes':
-            print('deleted')
+        if len(selection) and  messagebox.askquestion("askquestion", f"Are you sure deleting {len(selection)} item?")=='yes':
+            for item in selection:
+                self.book_tree.delete(item)

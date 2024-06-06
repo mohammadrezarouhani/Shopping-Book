@@ -23,9 +23,9 @@ class ShoppingCardPage(tk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-        #main label
-        main_label=Label(self,text="Card Item",font=("Arial",16,"bold"))
-        main_label.pack(fill='x',expand=True)
+        # main label
+        main_label = Label(self, text="Card Item", font=("Arial", 16, "bold"))
+        main_label.pack(fill="x", expand=True)
 
         # creating a tree view
         tree_frame = Frame(self)
@@ -91,17 +91,35 @@ class ShoppingCardPage(tk.Frame):
         self.card_label = Label(card_frame, text="There is 0 Item in Shopping Card")
         self.card_label.grid(row=0, column=0, padx=10, pady=10, columnspan=1)
 
+        # action frame
+        action_frame = Frame(card_frame)
+        action_frame.grid(row=0, column=1, sticky="wnes")
+        action_frame.columnconfigure(0, weight=1)
+        action_frame.columnconfigure(1, weight=1)
+
         # check Card
         checkout_button = Button(
-            card_frame,
+            action_frame,
             text="Proceed",
             background="white",
             command=lambda: self.controller.show_frame("ConfirmPage"),
+            width=10,
         )
-        checkout_button.grid(row=0, column=1, sticky=E, padx=6)
+        checkout_button.pack(side="right")
+
+        #delete button
+        del_button = Button(
+            action_frame,
+            text="Delete",
+            background="white",
+            command=self.remove_from_tree,
+            width=10,
+        )
+        del_button.pack(side="right",padx=5)
+
 
     def insert_book_item(self):
-        for i in range(100):
+        for i in range(2):
             if i % 2 == 0:
                 self.book_tree.insert(
                     parent="",
@@ -110,7 +128,7 @@ class ShoppingCardPage(tk.Frame):
                     text="",
                     values=(
                         i,
-                        "test",
+                        "card",
                         "test",
                         "test",
                         "test",
@@ -146,5 +164,5 @@ class ShoppingCardPage(tk.Frame):
             print(item_text)
 
     def remove_from_tree(self):
-        for record in self.book_tree.get_children():
-            self.book_tree.delete(record)
+        for item in self.book_tree.selection():
+            self.book_tree.delete(item)

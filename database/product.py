@@ -25,7 +25,7 @@ def create_product(isbn, user_id, category_id, title, publisher, price, quantity
     )
 
 
-def update_product(id, category_id, title, publisher, price, quantity, year):
+def update_product(id, category_id, title, publisher, price, quantity, year) -> bool:
     try:
         query = f"""
                     update Products set category_id={category_id}, title='{title}',
@@ -42,7 +42,11 @@ def update_product(id, category_id, title, publisher, price, quantity, year):
         return False
 
 
-def get_products() -> List[Product]:
-    query = """select * from Products where deleted!=1"""
-    res = cursor.execute(query)
-    return [Product(*item) for item in res.fetchall()]
+def get_products() -> List[Product] | bool:
+    try:
+        query = """select * from Products where deleted!=1"""
+        res = cursor.execute(query)
+        return [Product(*item) for item in res.fetchall()]
+    except:
+        print(format_exc())
+        return False

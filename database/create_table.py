@@ -105,6 +105,7 @@ def create_card_item_table():
                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 product_id INTEGER,
                 card_id INTEGER,
+                quantity INTEGER,
                 FOREIGN KEY (product_id) REFERENCES Cards(id)
                 FOREIGN KEY (product_id) REFERENCES Products(id)
             );
@@ -120,10 +121,7 @@ def create_order_table():
             (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 customer_id INTEGER,
-                product_id INTEGER,
-                card_id INTEGER,
                 submit INTEGER,
-                FOREIGN KEY (product_id) REFERENCES Cards(id)
                 FOREIGN KEY (customer_id) REFERENCES Customers(id)
             );
         """
@@ -236,5 +234,4 @@ def init_database():
 
 
 if __name__ == "__main__":
-    create_phone_table()
-    create_admin_table()
+    create_card_item_table()

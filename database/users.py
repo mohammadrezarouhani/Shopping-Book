@@ -1,5 +1,6 @@
 import sys
 from traceback import format_exc
+from database.card import get_card
 from models import *
 
 
@@ -95,8 +96,12 @@ def get_customer(username, password) -> Customer:
 
         res = cursor.execute(f'SELECT * FROM Customers WHERE user_id="{user[0]}"')
         customer = res.fetchone()
-
-        return Customer(*customer, *user[1:])
+        card = get_card(res[0])
+        return Customer(
+            *customer,
+            *user[1:],
+            card
+        )
     except:
         print(format_exc())
         return None
@@ -213,4 +218,3 @@ def get_admin(username, password):
     except:
         print(format_exc())
         return None
-

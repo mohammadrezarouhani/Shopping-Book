@@ -28,6 +28,21 @@ class Admin:
 
 
 @dataclass
+class CardItem:
+    id: int
+    product_id: int
+    card_id: int
+    quantity: int
+
+
+@dataclass
+class Card:
+    id: int
+    customer_id: int
+    card_items: List[CardItem] = field(default_factory=list)
+
+
+@dataclass
 class Customer:
     id: int
     user_id: int
@@ -39,27 +54,7 @@ class Customer:
     city: str = None
     state: str = None
     role: str = None
-
-
-@dataclass
-class Card:
-    id: int
-    customer_id: int
-
-
-@dataclass
-class CardItem:
-    id: int
-    product_id: int
-    card_id: int
-
-
-@dataclass
-class Order:
-    id: int
-    customer_id: int
-    product_id: int
-    card_id: int
+    card: Card
 
 
 @dataclass
@@ -68,6 +63,13 @@ class OrderItem:
     order_id: int
     product_id: int
     quantity: int
+
+
+@dataclass
+class Order:
+    id: int
+    customer_id: int
+    order_item: List[OrderItem] = field(default_factory=list)
 
 
 @dataclass
@@ -88,7 +90,8 @@ class Product:
     price: str
     quantity: int
     year: int
-    deleted:bool
+    deleted: bool
+
 
 @dataclass
 class Author:

@@ -1,5 +1,5 @@
 import sqlite3
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from typing import List, Optional
 
 sqliteConnection = sqlite3.connect("sql.db")
@@ -30,8 +30,8 @@ class Admin:
 @dataclass
 class Customer:
     id: int
+    user_id: int
     username: str
-    customer_id: int
     firstname: str = None
     lastname: str = None
     password: str = None

@@ -1,11 +1,12 @@
-from .connection import *
+from models import *
+
 
 def create_user_table():
     cursor.execute("DROP TABLE IF EXISTS Users;")
     query = """
        CREATE TABLE Users
             (
-                id int primary key,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
                 firstname varchar(115),
                 lastname varchar(115),
                 username varchar(115) not null unique,
@@ -22,13 +23,29 @@ def create_user_table():
     print(f"[create user table result]: {res}")
 
 
+def create_admin_table():
+    cursor.execute("DROP TABLE IF EXISTS Customers;")
+
+    query = """CREATE TABLE Customers
+            (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                FOREIGN KEY (user_id) REFERENCES Users(id)
+            );
+        """
+
+    print(query)
+    res = cursor.execute(query)
+    print(f"[create customer table result]: {res}")
+
+
 def create_customer_table():
     cursor.execute("DROP TABLE IF EXISTS Customers;")
 
     query = """CREATE TABLE Customers
             (
-                id int primary key,
-                user_id int,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
                 FOREIGN KEY (user_id) REFERENCES Users(id)
             );
         """
@@ -42,8 +59,10 @@ def create_phone_table():
     cursor.execute("DROP TABLE IF EXISTS PhoneNumber;")
     query = """CREATE TABLE PhoneNumber
             (
-                id int primary key,
-                number varchar(115)
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               user_id INTEGER,
+               number varchar(115),
+               FOREIGN KEY (user_id) REFERENCES Users(id)
             );
         """
     print(query)
@@ -52,12 +71,12 @@ def create_phone_table():
 
 
 def create_admin_table():
-    cursor.execute("DROP TABLE IF EXISTS PhoneNumbers;")
-    query = """CREATE TABLE PhoneNumbers
+    cursor.execute("DROP TABLE IF EXISTS Admins;")
+    query = """CREATE TABLE Admins
             (
-                id int primary key,
-                phone_id int,
-                FOREIGN KEY (phone_id) REFERENCES PhoneNumber(id)
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                FOREIGN KEY (user_id) REFERENCES Users(id)
             );
         """
     print(query)
@@ -69,8 +88,8 @@ def create_card_table():
     cursor.execute("DROP TABLE IF EXISTS Cards;")
     query = """CREATE TABLE Cards
             (
-                id int primary key,
-                customer_id int,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+                customer_id INTEGER,
                 FOREIGN KEY (customer_id) REFERENCES Customers(id)
             );
         """
@@ -83,9 +102,9 @@ def create_card_item_table():
     cursor.execute("DROP TABLE IF EXISTS CardItems;")
     query = """CREATE TABLE CardItems
             (
-                id int primary key,
-                product_id int,
-                card_id int,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+                product_id INTEGER,
+                card_id INTEGER,
                 FOREIGN KEY (product_id) REFERENCES Cards(id)
                 FOREIGN KEY (product_id) REFERENCES Products(id)
             );
@@ -99,10 +118,11 @@ def create_order_table():
     cursor.execute("DROP TABLE IF EXISTS Orders;")
     query = """CREATE TABLE Orders
             (
-                id int primary key,
-                customer_id int,
-                product_id int,
-                card_id int,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+                customer_id INTEGER,
+                product_id INTEGER,
+                card_id INTEGER,
+                submit INTEGER,
                 FOREIGN KEY (product_id) REFERENCES Cards(id)
                 FOREIGN KEY (customer_id) REFERENCES Customers(id)
             );
@@ -116,10 +136,10 @@ def create_order_item_table():
     cursor.execute("DROP TABLE IF EXISTS OrderItems;")
     query = """CREATE TABLE OrderItems
             (
-                id int primary key,
-                order_id int,
-                product_id int,
-                quantity int,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+                order_id INTEGER,
+                product_id INTEGER,
+                quantity INTEGER,
                 FOREIGN KEY (order_id) REFERENCES Orders(id)
                 FOREIGN KEY (product_id) REFERENCES Products(id)
             );
@@ -133,9 +153,9 @@ def create_review_table():
     cursor.execute("DROP TABLE IF EXISTS Reviews;")
     query = """CREATE TABLE Reviews
             (
-                id int primary key,
-                order_id int,
-                product_id int,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+                order_id INTEGER,
+                product_id INTEGER,
                 FOREIGN KEY (order_id) REFERENCES Orders(id)
                 FOREIGN KEY (product_id) REFERENCES Products(id)
             );
@@ -149,15 +169,16 @@ def create_product_table():
     cursor.execute("DROP TABLE IF EXISTS Products;")
     query = """CREATE TABLE Products
             (
-                id int primary key,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
                 isbn int not null unique,
-                user_id int,
+                user_id INTEGER,
                 category_id int
                 title varchar(115),
                 publisher varchar(115),
                 price varchar(115),
-                quantity int,
-                year int,
+                quantity INTEGER,
+                year INTEGER,
+                deleted INTEGER,
                 FOREIGN KEY (user_id) REFERENCES Users(id)
                 FOREIGN KEY (category_id) REFERENCES Categoreis(id)
             );
@@ -171,8 +192,8 @@ def create_author_table():
     cursor.execute("DROP TABLE IF EXISTS Authors;")
     query = """CREATE TABLE Authors
             (
-                id int primary key,
-                product_id int,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+                product_id INTEGER,
                 firstname varchar(115),
                 lastname varchar(115),
                 FOREIGN KEY (product_id) REFERENCES Products(id)
@@ -187,7 +208,7 @@ def create_category_table():
     cursor.execute("DROP TABLE IF EXISTS Categoreis;")
     query = """CREATE TABLE Categoreis
             (
-                id int primary key,
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title varchar(115),
                 state varchar(115),
                 credit_type varchar(115)
@@ -198,10 +219,8 @@ def create_category_table():
     print(f"[create category table result]: {res}")
 
 
-
-
-
 def init_database():
+    create_admin_table()
     create_user_table()
     create_customer_table()
     create_phone_table()
@@ -213,7 +232,9 @@ def init_database():
     create_card_table()
     create_card_item_table()
     create_order_table()
-    create_order_item_table()   
+    create_order_item_table()
 
-if __name__=='__main__':
-    init_database()
+
+if __name__ == "__main__":
+    create_phone_table()
+    create_admin_table()

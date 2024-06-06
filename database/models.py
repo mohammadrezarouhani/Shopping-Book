@@ -88,7 +88,7 @@ class Product:
     price: str
     quantity: int
     year: int
-
+    deleted:bool
 
 @dataclass
 class Author:

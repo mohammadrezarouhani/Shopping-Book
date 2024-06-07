@@ -238,4 +238,4 @@ def init_database():
 
 
 if __name__ == "__main__":
-    create_transaction()
+    create_card_item_table()

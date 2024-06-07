@@ -1,3 +1,5 @@
+from operator import index
+from ossaudiodev import control_labels
 import tkinter as tk
 from tkinter import (
     CENTER,
@@ -175,6 +177,8 @@ class BookListPage(MainFrame):
         self.insert_book_item()
 
     def add_to_card(self):
+        # create inital car dif user not logged in
+
         if not self.controller.user:
             self.controller.user = Customer()
             self.controller.user.card = Card()
@@ -184,30 +188,44 @@ class BookListPage(MainFrame):
         for item in self.book_tree.selection():
             target_product_id = int(item)
 
-            for index, card_item in enumerate(card_items):
-                if card_item.product_id == target_product_id:
-                    break
-            else:
-                index = -1
-
+            # card item product
             product = get_single_product(target_product_id)
-            if index:
-                new_item = CardItem(0, target_product_id, 0, 1, product)
-                self.controller.user.card.card_items.append(new_item)
-                print("[Added]:", new_item)
+            user = self.controller.user
 
-            elif card_items[index].quantity < product.quantity:
-                self.controller.user.card.card_items[index].quantity += 1
-                print("[Increased]: +1")
+            if not self.controller.logged_in:
+                pointer = -1
+                # get index if item already added
+                for index, card_item in enumerate(card_items):
+                    if card_item.product_id == target_product_id:
+                        pointer = index
+                        break
+
+                # if index create new item else update old item
+                if pointer < 0:
+                    new_item = CardItem(0, target_product_id, 0, 1, product)
+                    user.card.card_items.append(new_item)
+                    print("[Added]:", new_item)
+
+                elif card_items[pointer].quantity < product.quantity:
+                    user.card.card_items[pointer].quantity += 1
+                    print("[Increased]: +1")
+                else:
+                    messagebox.showerror(title="error", message="not enough in stock!")
+
             else:
-                messagebox.showerror(title="error", message="not enough in stock!")
-        
-        card_items: List[CardItem] = self.controller.user.card.card_items
-        self.card_label.config(text=f"there is {len(card_items)} item in Shopping Card",foreground='green')
+                item = get_card_item(target_product_id, user.card.id)
 
-        if self.controller.logged_in:
-            # auery and add card to data base
-            pass
+                if item:
+                    update_card_item(target_product_id, user.card.id, 1)
+                else:
+                    create_card_item(user.card.id, target_product_id, 1)
+
+                self.controller.user.card = get_card(user.id)
+
+            self.card_label.config(
+                text=f"there is {len(self.controller.user.card.card_items)} items in Shopping",
+                foreground="green",
+            )
 
     def remove_from_tree(self):
         for record in self.book_tree.get_children():

@@ -27,7 +27,7 @@ class StartPage(MainFrame):
 
     def init(self):
         print(self.controller.user)
-        if not self.controller.user:
+        if not self.controller.logged_in:
             # create continue as guest
             guest_button = tk.Button(
                 self,

@@ -15,7 +15,7 @@ def create_card(user_id: int) -> Card:
         return False
 
 
-def get_card(customer_id) -> Card:
+def get_card(user_id) -> Card:
     try:
         query = f"""
             select * from Cards 
@@ -24,12 +24,12 @@ def get_card(customer_id) -> Card:
             left join Categoreis on Products.category_id=Categoreis.id
             where Cards.user_id=? 
         """
-        res = cursor.execute(query, [customer_id])
+        res = cursor.execute(query, [user_id])
         data = res.fetchall()
         card_items = []
 
         for item in data:
-            if item[2]!=None:
+            if item[2] != None:
                 card_items.append(
                     CardItem(
                         item[2],
@@ -92,10 +92,62 @@ def delete_card_item(item_id, card_id) -> List[CardItem]:
         return False
 
 
-def clear_card_item(card_id):
+def clear_card_item(card_id) -> bool:
     try:
         query = f"delete from Card where card_id={id}"
         cursor.execute(query)
+        sqliteConnection.commit()
+        return True
+    except:
+        return False
+
+
+def get_card_item(product_id, card_id) -> CardItem:
+    query = """
+        select * from CardItems 
+        inner join Products on CardItems.product_id=Products.id  
+        inner join Categoreis on Categoreis.id=Products.category_id
+        where product_id=? and card_id=?
+    """
+    res = cursor.execute(query, [product_id, card_id])
+    item = res.fetchone()
+
+    if item:
+        return CardItem(
+            item[0],
+            item[1],
+            item[2],
+            item[3],
+            Product(
+                item[4],
+                item[5],
+                item[6],
+                item[7],
+                item[8],
+                item[9],
+                item[10],
+                item[11],
+                item[12],
+                item[13],
+                Category(
+                    item[14],
+                    item[15],
+                    item[16],
+                    item[17],
+                ),
+            ),
+        )
+    else:
+        return None
+
+
+def update_card_item(product_id, card_id, quantity) -> CardItem:
+    try:
+        query = """
+            update CardItems set quantity=? where product_id=? and card_id=?
+        """
+        print(query)
+        cursor.execute(query, [quantity, product_id, card_id])
         sqliteConnection.commit()
         return True
     except:

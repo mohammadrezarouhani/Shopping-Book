@@ -1,7 +1,7 @@
 import sys
 from traceback import format_exc
-from database.card import get_card
-from models import *
+from database.card import create_card, get_card
+from .models import *
 
 
 def create_customer(
@@ -32,6 +32,8 @@ def create_customer(
     customer_id = cursor.lastrowid
 
     print("[customer insert id result]", customer_id)
+    card = create_card(user_id)
+
     return Customer(
         customer_id,
         user_id,
@@ -43,6 +45,7 @@ def create_customer(
         city,
         state,
         "customer",
+        card,
     )
 
 
@@ -96,12 +99,8 @@ def get_customer(username, password) -> Customer:
 
         res = cursor.execute(f'SELECT * FROM Customers WHERE user_id="{user[0]}"')
         customer = res.fetchone()
-        card = get_card(res[0])
-        return Customer(
-            *customer,
-            *user[1:],
-            card
-        )
+        card = get_card(user[0])
+        return Customer(*customer, *user[1:], card)
     except:
         print(format_exc())
         return None

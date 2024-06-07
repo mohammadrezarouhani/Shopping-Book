@@ -19,11 +19,13 @@ from tkinter import (
     ttk,
 )
 
+from .main_frame import MainFrame
 
-class SystemPage(tk.Frame):
+
+class SystemPage(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
+        
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 

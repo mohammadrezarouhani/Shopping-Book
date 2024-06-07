@@ -2,6 +2,7 @@ from email.mime import image
 import tkinter as tk
 from tkinter import E, N, S, W, Button, Frame, ttk
 from components import *
+from database import *
 
 # any page that we create should be registred here
 frame_list = [
@@ -29,20 +30,20 @@ class MainApplication(tk.Tk):
         self.title("Book Online Shop")
         self.geometry("650x550")
         self.resizable(0, 0)
+        self.history = []
+        self.logged_in = False
 
-        # setting global style
+        self.user: Customer | Admin = None
 
         style = ttk.Style(self)
         style.configure("Treeview", rowheight=40)
 
-        # Create a container frame
         container = Frame(self, background="lightblue")
         container.pack(fill="both", expand=True)
         container.columnconfigure(0, weight=1)
         container.rowconfigure(0, weight=0)
         container.rowconfigure(1, weight=1)
 
-        # tool bar
         toolbar = Frame(container, height=5, background="lightblue")
         toolbar.grid(row=0, column=0, padx=5, pady=5)
 
@@ -64,23 +65,21 @@ class MainApplication(tk.Tk):
         )
         search_page_button.grid(row=0, column=1, sticky=W, padx=5)
 
-        # Dictionary to hold the different frames
         self.frames = {}
 
-        # Initialize and store each frame
         for F in frame_list:
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
 
-        # Show the initial frame
         self.show_frame("StartPage")
 
     def show_frame(self, page_name):
-        """Show a frame for the given page name"""
         frame = self.frames[page_name]
         frame.grid(row=1, column=0, sticky=N + W + E + S)
+        frame.update_data()
         frame.tkraise()
+        self.history.append(page_name)
 
 
 if __name__ == "__main__":

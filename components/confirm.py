@@ -1,5 +1,3 @@
-from re import X
-from textwrap import fill
 import tkinter as tk
 from tkinter import (
     CENTER,
@@ -15,11 +13,13 @@ from tkinter import (
     ttk,
 )
 
+from .main_frame import MainFrame
 
-class ConfirmPage(tk.Frame):
+
+class ConfirmPage(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
+        
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 

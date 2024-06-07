@@ -28,33 +28,57 @@ class Admin:
 
 
 @dataclass
+class Category:
+    id: int
+    title: str
+    state: str
+    credit_type: str
+
+
+@dataclass
+class Product:
+    id: int
+    isbn: int
+    user_id: int
+    category_id: int
+    title: str
+    publisher: str
+    price: str
+    quantity: int
+    year: int
+    deleted: bool
+    category: Category
+
+
+@dataclass
 class CardItem:
     id: int
     product_id: int
     card_id: int
     quantity: int
+    product: Optional[Product] = None
 
 
 @dataclass
 class Card:
-    id: int
-    customer_id: int
+    id: Optional[int] = None
+    customer_id: Optional[int] = None
     card_items: List[CardItem] = field(default_factory=list)
 
 
 @dataclass
 class Customer:
-    id: int
-    user_id: int
-    username: str
-    firstname: str = None
-    lastname: str = None
-    password: str = None
-    address: str = None
-    city: str = None
-    state: str = None
-    role: str = None
-    card: Card
+    id: Optional[int] = None
+    user_id: Optional[int] = None
+    username: Optional[str] = None
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    password: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    role: Optional[str] = None
+    card: Optional[Card] = None
 
 
 @dataclass
@@ -80,30 +104,8 @@ class Review:
 
 
 @dataclass
-class Product:
-    id: int
-    isbn: int
-    user_id: int
-    category_id: int
-    title: str
-    publisher: str
-    price: str
-    quantity: int
-    year: int
-    deleted: bool
-
-
-@dataclass
 class Author:
     id: int
     product_id: int
     firstname: str
     lastname: str
-
-
-@dataclass
-class Category:
-    id: int
-    title: str
-    state: str
-    credit_type: str

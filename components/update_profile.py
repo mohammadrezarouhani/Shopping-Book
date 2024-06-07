@@ -4,13 +4,15 @@ from os import name
 import tkinter as tk
 from tkinter import  Button, Entry, Label, LabelFrame, StringVar, ttk
 
+from .main_frame import MainFrame
+
 from .datetime_entry import DateEntry
 
 
-class UpdateProfile(tk.Frame):
+class UpdateProfile(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
+        
         style = ttk.Style()
         style.configure(
             "W.Button",

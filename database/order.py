@@ -1,6 +1,6 @@
 from traceback import format_exc
 from database.card import get_card
-from models import *
+from .models import *
 
 
 def get_orders(id) -> Order:
@@ -28,10 +28,10 @@ def update_order(id, submit: int) -> bool:
         return False
 
 
-def create_order(customer_id) -> Order | None:
+def create_order(user_id) -> Order | None:
     try:
-        card = get_card(customer_id)
-        query = f"""insert into Orders values({card.customer_id},0)"""
+        card = get_card(user_id)
+        query = f"""insert into Orders (customer_id) values({card.customer_id},0)"""
         cursor.execute(query)
         sqliteConnection.commit()
         order_id = cursor.lastrowid
@@ -45,7 +45,7 @@ def create_order(customer_id) -> Order | None:
                 OrderItem(cursor.lastrowid, order_id, c.product_id, c.quantity)
             )
 
-        return Order(order_id, customer_id, order_items)
+        return Order(order_id, user_id, order_items)
     except:
         print(format_exc())
         return False

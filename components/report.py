@@ -1,28 +1,16 @@
-from cgitb import text
-from functools import wraps
-from importlib.abc import ResourceReader
 from re import X
 import tkinter as tk
 from tkinter import (
-    CENTER,
-    RIGHT,
-    E,
-    W,
-    Y,
-    Button,
-    Entry,
-    Frame,
     Label,
-    LabelFrame,
-    Scrollbar,
-    ttk,
 )
 
+from .main_frame import MainFrame
 
-class ReportPage(tk.Frame):
+
+class ReportPage(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
+        
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 

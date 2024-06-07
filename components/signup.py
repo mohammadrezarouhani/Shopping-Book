@@ -4,13 +4,14 @@ from os import name
 import tkinter as tk
 from tkinter import  Button, Entry, Label, LabelFrame, StringVar, ttk
 
+from .main_frame import MainFrame
+
 from .datetime_entry import DateEntry
 
 
-class SignUpPage(tk.Frame):
+class SignUpPage(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
         
         main_label=Label(self,text="SignUp",font=("Arial",16,"bold"))
         main_label.pack(fill='x',expand=True)

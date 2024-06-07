@@ -14,12 +14,17 @@ from tkinter import (
     Scrollbar,
     ttk,
 )
+from tkinter import messagebox
+
+from database.models import Card
+
+from .main_frame import MainFrame
 
 
-class ShoppingCardPage(tk.Frame):
+class ShoppingCardPage(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
+
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
@@ -36,51 +41,45 @@ class ShoppingCardPage(tk.Frame):
         tree_scroll.pack(side=RIGHT, fill=Y)
 
         # creating tree view
-        self.book_tree = ttk.Treeview(
+        self.card_tree = ttk.Treeview(
             tree_frame,
             yscrollcommand=tree_scroll.set,
             selectmode="extended",
             show="headings",
             height=5,
         )
-        self.book_tree.pack(fill="both", expand=True)
+        self.card_tree.pack(fill="both", expand=True)
 
         # configure scrollbar
-        tree_scroll.config(command=self.book_tree.yview)
+        tree_scroll.config(command=self.card_tree.yview)
 
         # set three headers
-        self.book_tree["columns"] = (
-            "Index",
+        self.card_tree["columns"] = (
             "ISBN",
             "Title",
-            "Author",
             "Publisher",
             "Price",
+            "Quantity",
         )
 
         # set tree columns
-        self.book_tree.column("#0", width=0, stretch=NO)
-        self.book_tree.column("Index", width=50, anchor=CENTER)
-        self.book_tree.column("ISBN", anchor=CENTER, width=100)
-        self.book_tree.column("Title", anchor=CENTER, width=130)
-        self.book_tree.column("Author", anchor=CENTER, width=130)
-        self.book_tree.column("Publisher", anchor=CENTER, width=130)
-        self.book_tree.column("Price", anchor=CENTER, width=100)
+        self.card_tree.column("#0", width=0, stretch=NO)
+        self.card_tree.column("ISBN", anchor=CENTER, width=100)
+        self.card_tree.column("Title", anchor=CENTER, width=130)
+        self.card_tree.column("Publisher", anchor=CENTER, width=130)
+        self.card_tree.column("Price", anchor=CENTER, width=100)
+        self.card_tree.column("Quantity", anchor=CENTER, width=100)
 
         # set hedings
-        self.book_tree.heading("Index", text="Index", anchor=CENTER)
-        self.book_tree.heading("ISBN", text="ISBN", anchor=CENTER)
-        self.book_tree.heading("Title", text="Title", anchor=CENTER)
-        self.book_tree.heading("Author", text="Author", anchor=CENTER)
-        self.book_tree.heading("Publisher", text="Publisher", anchor=CENTER)
-        self.book_tree.heading("Price", text="Price", anchor=CENTER)
+        self.card_tree.heading("ISBN", text="ISBN", anchor=CENTER)
+        self.card_tree.heading("Title", text="Title", anchor=CENTER)
+        self.card_tree.heading("Publisher", text="Publisher", anchor=CENTER)
+        self.card_tree.heading("Price", text="Price", anchor=CENTER)
+        self.card_tree.heading("Quantity", text="Quantity", anchor=CENTER)
 
         # set tree tags
-        self.book_tree.tag_configure("odd", background="white")
-        self.book_tree.tag_configure("even", background="lightblue")
-
-        # insert inital data
-        self.insert_book_item()
+        self.card_tree.tag_configure("odd", background="white")
+        self.card_tree.tag_configure("even", background="lightblue")
 
         # Search Frame
         card_frame = LabelFrame(self, text="Card Detail")
@@ -102,12 +101,12 @@ class ShoppingCardPage(tk.Frame):
             action_frame,
             text="Proceed",
             background="white",
-            command=lambda: self.controller.show_frame("ConfirmPage"),
+            command=self.checkout,
             width=10,
         )
         checkout_button.pack(side="right")
 
-        #delete button
+        # delete button
         del_button = Button(
             action_frame,
             text="Delete",
@@ -115,54 +114,72 @@ class ShoppingCardPage(tk.Frame):
             command=self.remove_from_tree,
             width=10,
         )
-        del_button.pack(side="right",padx=5)
+        del_button.pack(side="right", padx=5)
 
+    def init(self):
+        self.remove_from_tree()
+        self.card: Card = self.controller.user.card
+        self.insert_book_item()
 
     def insert_book_item(self):
-        for i in range(2):
-            if i % 2 == 0:
-                self.book_tree.insert(
+        for index, item in enumerate(self.card.card_items):
+            if index % 2 == 0:
+                self.card_tree.insert(
                     parent="",
                     index="end",
-                    iid=i,
+                    iid=index,
                     text="",
                     values=(
-                        i,
-                        "card",
-                        "test",
-                        "test",
-                        "test",
-                        "test",
+                        item.product.isbn,
+                        item.product.title,
+                        item.product.publisher,
+                        item.product.price,
+                        item.quantity,
                     ),
                     tags="odd",
                 )
 
             else:
-                self.book_tree.insert(
+                self.card_tree.insert(
                     parent="",
                     index="end",
-                    iid=i,
+                    iid=index,
                     text="",
                     values=(
-                        i,
-                        "test",
-                        "test",
-                        "test",
-                        "test",
-                        "test",
+                        item.product.isbn,
+                        item.product.title,
+                        item.product.publisher,
+                        item.product.price,
+                        item.quantity,
                     ),
                     tags="even",
                 )
 
-    def search(self, *args):
-        """query to data base for filtering"""
-        print(f"Text changed to: {self.text_var.get()}")
-
-    def add_to_card(self):
-        for item in self.book_tree.selection():
-            item_text = self.book_tree.item(item, "values")
-            print(item_text)
+            self.card_label.config(
+                text=f"there is {len(self.card.card_items)} items in Shopping Card"
+            )
 
     def remove_from_tree(self):
-        for item in self.book_tree.selection():
-            self.book_tree.delete(item)
+        for item in self.card_tree.get_children():
+            self.card_tree.delete(item)
+
+    def remove_selected_items(self, *args):
+        selection = self.card_tree.selection()
+        if (
+            len(selection)
+            and messagebox.askquestion(
+                "askquestion", f"Are you sure deleting {len(selection)} item?"
+            )
+            == "yes"
+        ):
+            for item in selection:
+                self.card_tree.delete(item)
+
+        if self.controller.logged_in:
+            pass
+
+    def checkout(self):
+        if self.controller.logged_in:
+            self.controller.show_frame("ConfirmPage")
+        else:
+            self.controller.show_frame("LoginPage")

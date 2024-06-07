@@ -20,13 +20,14 @@ from tkinter import (
     ttk,
 )
 
+from .main_frame import MainFrame
+
 from .datetime_entry import DateEntry
 
 
-class InsertBookPage(tk.Frame):
+class InsertBookPage(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
 
         st = ttk.Style()
         # st.configure("C.Treeview", rowheight=18)
@@ -64,26 +65,36 @@ class InsertBookPage(tk.Frame):
 
         auth_control_frame = Frame(author_frame)
         auth_control_frame.grid(row=0, column=0, sticky="wn")
-        auth_control_frame.columnconfigure(0,weight=0)
-        auth_control_frame.columnconfigure(1,weight=0)
-        
+        auth_control_frame.columnconfigure(0, weight=0)
+        auth_control_frame.columnconfigure(1, weight=0)
+
         # auth entry
         self.author_var = StringVar()
-        self.author_entry = Entry(auth_control_frame, textvariable=self.author_var,font=("Arial",12))
-        self.author_entry.grid(row=0, column=0, sticky="wn",padx=5,pady=20)
+        self.author_entry = Entry(
+            auth_control_frame, textvariable=self.author_var, font=("Arial", 12)
+        )
+        self.author_entry.grid(row=0, column=0, sticky="wn", padx=5, pady=20)
         self.author_entry.bind("<Return>", self.add_author)
 
         # add button
         add_btn = Button(
-            auth_control_frame, command=self.add_author, text="Add",width=6,background="white"
+            auth_control_frame,
+            command=self.add_author,
+            text="Add",
+            width=6,
+            background="white",
         )
-        add_btn.grid(row=1, column=0, sticky="wen",padx=5)
+        add_btn.grid(row=1, column=0, sticky="wen", padx=5)
 
         # delete button
         delete_button = Button(
-            auth_control_frame, command=self.remove_author, text="Delete",width=6,background="white"
+            auth_control_frame,
+            command=self.remove_author,
+            text="Delete",
+            width=6,
+            background="white",
         )
-        delete_button.grid(row=2, column=0, sticky="wen",padx=5)
+        delete_button.grid(row=2, column=0, sticky="wen", padx=5)
 
         # tree view
         tree_frame = Frame(author_frame)
@@ -99,7 +110,7 @@ class InsertBookPage(tk.Frame):
             selectmode="extended",
             show="headings",
             height=5,
-            style="C.Treeview"
+            style="C.Treeview",
         )
         self.author_tree.pack(fill="both", expand=True)
         tree_scroll.config(command=self.author_tree.yview)

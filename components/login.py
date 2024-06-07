@@ -1,14 +1,15 @@
-from cgitb import text
-from logging import PlaceHolder
 import tkinter as tk
-from tkinter import E, W, Button, Entry, Frame, Label, StringVar, ttk
-from traceback import print_tb
+from tkinter import Button, Entry, Frame, Label, StringVar
+from tkinter.ttk import Combobox
+
+from database import *
+from .main_frame import MainFrame
 
 
-class LoginPage(tk.Frame):
+class LoginPage(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
+
         self.columnconfigure(0, weight=1)
 
         label = Label(
@@ -48,18 +49,34 @@ class LoginPage(tk.Frame):
             background="white",
             font=("arial", 12),
         )
-        button2.grid(row=3, column=0, padx=200, pady=10,sticky="e")
+        button2.grid(row=3, column=0, padx=200, pady=10, sticky="e")
 
-        # sign up button
-        # button2 = Button(
-        #     self,
-        #     text="SignUp",
-        #     command=lambda: controller.show_frame("SignUpPage"),
-        #     width=15,
-        #     background="white",
-        #     font=("arial", 10),
-        # )
-        # button2.grid(row=4, column=0, padx=10, pady=10)
+        self.type = tk.StringVar()
+        self.type_user = Combobox(self, width=18, textvariable=self.type)
+        self.type_user.grid(row=4, column=0, padx=200, pady=10, sticky="e")
+        self.type_user["values"] = ["admin", "customer"]
 
     def sign_in(self):
-        print("signed in ...")
+        type = self.type.get()
+        username = self.username_state.get()
+        password = self.password_state.get()
+
+        user: Customer | Admin = self.controller.user
+
+        if type == "admin":
+            new_user = None
+        else:
+            new_user = get_customer(username, password)
+
+            if new_user and user and user.card and user.card.card_items:
+                card_items = user.card.card_items
+                new_user.card.card_items.extend(card_items)
+
+                for item in card_items:
+                    create_card_item(new_user.card.id, item.product.id, item.quantity)
+
+        if new_user:
+            # self.controller.logged_in = True
+            self.controller.user = new_user
+            prev = self.controller.history[-2]
+            self.controller.show_frame(prev)

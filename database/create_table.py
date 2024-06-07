@@ -88,9 +88,9 @@ def create_card_table():
     cursor.execute("DROP TABLE IF EXISTS Cards;")
     query = """CREATE TABLE Cards
             (
-               id INTEGER PRIMARY KEY AUTOINCREMENT,
-                customer_id INTEGER,
-                FOREIGN KEY (customer_id) REFERENCES Customers(id)
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER unique, 
+                FOREIGN KEY (user_id) REFERENCES Users(id)
             );
         """
     print(query)
@@ -119,10 +119,10 @@ def create_order_table():
     cursor.execute("DROP TABLE IF EXISTS Orders;")
     query = """CREATE TABLE Orders
             (
-               id INTEGER PRIMARY KEY AUTOINCREMENT,
-                customer_id INTEGER,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
                 submit INTEGER,
-                FOREIGN KEY (customer_id) REFERENCES Customers(id)
+                FOREIGN KEY (user_id) REFERENCES Users(id)
             );
         """
     print(query)
@@ -168,9 +168,9 @@ def create_product_table():
     query = """CREATE TABLE Products
             (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                isbn int not null unique,
+                isbn INTEGER not null unique,
                 user_id INTEGER,
-                category_id int
+                category_id INTEGER,
                 title varchar(115),
                 publisher varchar(115),
                 price varchar(115),
@@ -217,6 +217,10 @@ def create_category_table():
     print(f"[create category table result]: {res}")
 
 
+def create_transaction():
+    cursor.execute("DROP TABLE IF EXISTS Transactions;")
+
+
 def init_database():
     create_admin_table()
     create_user_table()
@@ -234,4 +238,4 @@ def init_database():
 
 
 if __name__ == "__main__":
-    create_card_item_table()
+    create_transaction()

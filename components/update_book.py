@@ -18,13 +18,14 @@ from tkinter import (
     ttk,
 )
 
+from .main_frame import MainFrame
+
 from .datetime_entry import DateEntry
 
 
-class UpdateBookPage(tk.Frame):
+class UpdateBookPage(MainFrame):
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        self.controller = controller
+        super().__init__(parent, controller)
 
         st = ttk.Style()
         st.configure("C.Treeview", rowheight=18)

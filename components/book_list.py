@@ -170,6 +170,7 @@ class BookListPage(MainFrame):
                 )
 
     def search(self, *args):
+        self.remove_from_tree()
         self.product_list = filter_product(self.text_var.get())
         self.insert_book_item()
 

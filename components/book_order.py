@@ -1,13 +1,12 @@
-from cgitb import text
-from functools import wraps
-from importlib.abc import ResourceReader
-from re import X
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import (
     CENTER,
+    E,
     NO,
     RIGHT,
     Y,
+    Button,
     Entry,
     Frame,
     Label,
@@ -16,38 +15,51 @@ from tkinter import (
     ttk,
 )
 
+from database.models import Admin
+from database.order import get_all_orders, get_orders
+from database.product import delete_product, filter_product, get_all_user_products
+
 from .main_frame import MainFrame
 
 
 class BookOrderPage(MainFrame):
     def init(self):
-        
+
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
         # main label
-        main_label = Label(self, text="Manage Book Orders", font=("Arial", 16, "bold"))
+        main_label = Label(self, text="Manage Book Order", font=("Arial", 16, "bold"))
         main_label.pack(fill="x", expand=True)
 
         # Search Frame
-        search_frame = LabelFrame(self, text="Input")
+        search_frame = LabelFrame(self, text="Input", font=("Arial", 12, "bold"))
         search_frame.pack(fill="x", expand="yes")
-        search_frame.columnconfigure(0, weight=1)
-        search_frame.columnconfigure(1, weight=1)
+
+        search_frame.columnconfigure(0, weight=0)
+        search_frame.columnconfigure(1, weight=0)
         search_frame.columnconfigure(2, weight=1)
 
-        # create search label
-        search_label = Label(
-            search_frame, text="search by ISBN or title or author or publisher"
-        )
-        search_label.grid(row=0, column=0, padx=10, pady=10)
+        # search label
+        search_label = Label(search_frame, text="search by customer name")
+        search_label.grid(row=0, column=0, padx=5, pady=10)
 
-        # create a entry labelo and biding text change event
+        #  a entry label and biding text change event
         self.text_var = tk.StringVar()
-        self.text_var.trace_add("write", self.search)
-        search_entry = Entry(search_frame, textvariable=self.text_var)
-        search_entry.grid(row=0, column=1, padx=10, pady=10)
-        # search_entry.bind("<KeyRelease>", self.search)
+        search_entry = Entry(
+            search_frame, textvariable=self.text_var, width=15, font=("Arial", 10)
+        )
+        search_entry.grid(row=0, column=1, padx=5, pady=10)
+
+        #  add button
+        search_button = Button(
+            search_frame,
+            text="Search",
+            background="white",
+            width=15,
+            command=self.search,
+        )
+        search_button.grid(row=0, column=2, padx=5, pady=10, sticky="e")
 
         # creating a tree view
         tree_frame = Frame(self)
@@ -72,69 +84,51 @@ class BookOrderPage(MainFrame):
 
         # set three headers
         self.book_tree["columns"] = (
-            "Index",
-            "ISBN",
-            "Title",
-            "Author",
-            "Quantity",
-            "Minimum",
-            "OrderQuantity",
+            "Customer",
+            "Credit Card",
+            "Total Price",
+            "Submit",
         )
 
         # set tree columns
         self.book_tree.column("#0", width=0, stretch=NO)
-        self.book_tree.column("Index", width=50, anchor=CENTER)
-        self.book_tree.column("ISBN", anchor=CENTER, width=100)
-        self.book_tree.column("Title", anchor=CENTER, width=130)
-        self.book_tree.column("Author", anchor=CENTER, width=130)
-        self.book_tree.column("Quantity", anchor=CENTER, width=130)
-        self.book_tree.column("Minimum", anchor=CENTER, width=100)
-        self.book_tree.column("OrderQuantity", anchor=CENTER, width=100)
+        self.book_tree.column("Customer", anchor=CENTER, width=100)
+        self.book_tree.column("Credit Card", anchor=CENTER, width=130)
+        self.book_tree.column("Total Price", anchor=CENTER, width=130)
+        self.book_tree.column("Submit", anchor=CENTER, width=100)
 
         # set hedings
-        self.book_tree.heading("Index", text="Index", anchor=CENTER)
-        self.book_tree.heading("ISBN", text="ISBN", anchor=CENTER)
-        self.book_tree.heading("Title", text="Title", anchor=CENTER)
-        self.book_tree.heading("Author", text="Author", anchor=CENTER)
-        self.book_tree.heading("Quantity", text="Quantity in Stock", anchor=CENTER)
-        self.book_tree.heading("Minimum", text="Minimum Required", anchor=CENTER)
-        self.book_tree.heading("OrderQuantity", text="OrderQuantity", anchor=CENTER)
+        self.book_tree.heading("Customer", text="Customer", anchor=CENTER)
+        self.book_tree.heading("Credit Card", text="Credit Card", anchor=CENTER)
+        self.book_tree.heading("Total Price", text="Total Price", anchor=CENTER)
+        self.book_tree.heading("Submit", text="Submit", anchor=CENTER)
 
         # set tree tags
         self.book_tree.tag_configure("odd", background="white")
         self.book_tree.tag_configure("even", background="lightblue")
-        self.book_tree.tag_configure("submitted", background="green")
-        self.book_tree.tag_configure("dismissed", background="red")
 
-        # insert inital data
-        self.insert_order_item()
+        # Order Frame
+        card_frame = Frame(self)
+        card_frame.pack(fill="x", expand="yes", padx=10)
+        card_frame.grid_columnconfigure(0, weight=1)
 
-        # Search Frame
-        card_frame = LabelFrame(self, text="Card Detail")
-        card_frame.pack(fill="x", expand="yes")
-        card_frame.grid_columnconfigure(1, weight=1)
+        self.user: Admin = self.controller.user
+        self.orders = get_all_orders(self.user.id)
 
-        # create card label
-        self.card_label = Label(
-            card_frame, text="There is 0 Order in a Way", foreground="green"
-        )
-        self.card_label.grid(row=0, column=0, padx=10, pady=10, columnspan=1)
-
-    def insert_order_item(self):
-        for i in range(10):
-            if i % 2 == 0:
+    def insert_book_item(self):
+        for index, p in enumerate(self.products):
+            if index % 2 == 0:
                 self.book_tree.insert(
                     parent="",
                     index="end",
-                    iid=i,
+                    iid=p.id,
                     text="",
                     values=(
-                        i,
-                        "test",
-                        "test",
-                        "test",
-                        "test",
-                        "test",
+                        p.isbn,
+                        p.title,
+                        p.publisher,
+                        p.price,
+                        bool(p.deleted == -1),
                     ),
                     tags="odd",
                 )
@@ -143,19 +137,47 @@ class BookOrderPage(MainFrame):
                 self.book_tree.insert(
                     parent="",
                     index="end",
-                    iid=i,
+                    iid=p.id,
                     text="",
                     values=(
-                        i,
-                        "test",
-                        "test",
-                        "test",
-                        "test",
-                        "test",
+                        p.isbn,
+                        p.title,
+                        p.publisher,
+                        p.price,
+                        bool(p.deleted == -1),
                     ),
                     tags="even",
                 )
 
     def search(self, *args):
-        """query to data base for filtering"""
-        print(f"Text changed to: {self.text_var.get()}")
+        pass
+
+    def delete_book(self):
+        selection = self.book_tree.selection()
+
+        if (
+            len(selection)
+            and messagebox.askquestion(
+                "askquestion", f"Are you sure deleting {len(selection)} item?"
+            )
+            == "yes"
+        ):
+            for item in selection:
+                self.book_tree.delete(item)
+                delete_product(int(item))
+
+            self.products = get_all_user_products(self.user.user_id)
+            self.clean_table()
+            self.insert_book_item()
+
+    def clean_table(self):
+        for item in self.book_tree.get_children():
+            self.book_tree.delete(item)
+
+    def modify(self):
+        for id in self.book_tree.selection():
+            self.controller.current_product_id = int(id)
+            self.controller.show_frame("UpdateBookPage")
+            break
+        else:
+            messagebox.showinfo("no selecteditem", "select a book inorder to modify")

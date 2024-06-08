@@ -26,14 +26,14 @@ def get_orders(id) -> Order:
         orders[0][2],
         orders[0][3],
         orders[0][4],
+        orders[0][5],
         order_item=[
             OrderItem(
-                item[5],
                 item[6],
                 item[7],
                 item[8],
+                item[9],
                 Product(
-                    item[9],
                     item[10],
                     item[11],
                     item[12],
@@ -43,6 +43,7 @@ def get_orders(id) -> Order:
                     item[16],
                     item[17],
                     item[18],
+                    item[19],
                     category=Category(item[20], item[21], item[21], item[22]),
                 ),
             )
@@ -101,3 +102,19 @@ def create_order_item(order_id, product_id, quantity):
     except:
         print(format_exc())
         return False
+
+
+def get_all_orders():
+    query = f"""
+        select * from Orders 
+    """
+    print(query)
+    res = cursor.execute(query)
+    orders = res.fetchall()
+    order_list = []
+    pdb.set_trace()
+    for order in orders:
+        customer = get_customer_by_id(order[0][1])
+        order_list.append(
+            Order(order[0], order[1], order[2], order[3], order[4], order[5])
+        )

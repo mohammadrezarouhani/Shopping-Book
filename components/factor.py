@@ -26,7 +26,6 @@ class FactorPage(MainFrame):
     def init(self):
         self.order = get_orders(self.controller.current_order_id)
         self.user = self.order.customer
-        pdb.set_trace()
 
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)

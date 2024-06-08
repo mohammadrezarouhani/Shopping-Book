@@ -127,18 +127,22 @@ def get_customer_by_id(id) -> Customer:
         return None
 
 
-def get_customer(username, password) -> Customer:
+def get_user(username, password) -> Customer | Admin:
     try:
         query = f"SELECT * FROM Users WHERE username=? AND password=?"
         print(query)
 
         res = cursor.execute(query, [username, password])
         user = res.fetchone()
-
-        res = cursor.execute(f"SELECT * FROM Customers WHERE user_id=?", [user[0]])
-        customer = res.fetchone()
-        card = get_card(user[0])
-        return Customer(*customer, *user[1:], card)
+        if user[-1] == "customer":
+            res = cursor.execute(f"SELECT * FROM Customers WHERE user_id=?", [user[0]])
+            customer = res.fetchone()
+            card = get_card(user[0])
+            return Customer(*customer, *user[1:], card)
+        else:
+            res = cursor.execute(f"SELECT * FROM Admins WHERE user_id=?", [user[0]])
+            admin = res.fetchone()
+            return Admin(*admin,*user[1:])
     except:
         print(format_exc())
         return None
@@ -152,15 +156,16 @@ def create_admin(
     address: str,
     city: str,
     state: str,
+    zip_code: str,
     phone_numbers: list,
 ) -> Admin:
     query = f"""
         INSERT INTO Users (username, firstname, lastname, password, address, city, state,zip_code,role) 
-        VALUES (?, ?, ?, ?, ?, ?, ?,'admin');
+        VALUES (?, ?, ?, ?, ?, ?, ?,?,'admin');
         """
     print(query)
     cursor.execute(
-        query, [username, firstname, lastname, password, address, city, state]
+        query, [username, firstname, lastname, password, address, city, state, zip_code]
     )
     sqliteConnection.commit()
     user_id = cursor.lastrowid

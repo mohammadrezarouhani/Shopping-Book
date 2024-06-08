@@ -130,7 +130,7 @@ class BookListPage(MainFrame):
         checkout_button.grid(row=0, column=1, sticky=E, padx=6)
 
         self.remove_from_tree()
-        self.product_list = get_products()
+        self.product_list = get_all_products()
         self.insert_book_item()
 
     def insert_book_item(self):

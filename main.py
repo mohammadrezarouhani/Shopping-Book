@@ -35,6 +35,7 @@ class MainApplication(tk.Tk):
         self.logged_in = False
         self.user: Customer | Admin = None
         self.current_order_id=None
+        self.current_product_id=None
         
         style = ttk.Style(self)
         style.configure("Treeview", rowheight=40)

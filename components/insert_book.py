@@ -2,6 +2,7 @@ from ast import Delete
 from cgitb import text
 from logging import PlaceHolder
 from os import name
+import pdb
 from sqlite3 import Row
 import tkinter as tk
 from tkinter import (
@@ -19,6 +20,11 @@ from tkinter import (
     StringVar,
     ttk,
 )
+from tkinter import messagebox
+
+from database.category import get_categoreis, get_category, get_category_by_title
+from database.models import Admin
+from database.product import create_product
 
 from .main_frame import MainFrame
 
@@ -28,7 +34,7 @@ from .datetime_entry import DateEntry
 class InsertBookPage(MainFrame):
     def init(self):
         st = ttk.Style()
-        # st.configure("C.Treeview", rowheight=18)
+        st.configure("C.Treeview", rowheight=18)
 
         # main label
         main_label = Label(self, text="Insert New Book", font=("Arial", 16, "bold"))
@@ -37,22 +43,22 @@ class InsertBookPage(MainFrame):
         top_frame = Frame(self)
         top_frame.pack(fill="x", expand="yes")
         top_frame.columnconfigure(0, weight=0)
-        top_frame.columnconfigure(1, weight=1)
+        top_frame.columnconfigure(1, weight=0)
         top_frame.columnconfigure(2, weight=0)
-        top_frame.columnconfigure(3, weight=1)
+        top_frame.columnconfigure(3, weight=0)
 
         # isbn
+        self.isbn = StringVar()
         isbn_label = Label(top_frame, text="ISBN:", width=10)
-        isbn_entry = Entry(
-            top_frame,
-        )
-        isbn_label.grid(row=0, column=0)
+        isbn_entry = Entry(top_frame, textvariable=self.isbn, font=("Arial", 10))
+        isbn_label.grid(row=0, column=0, padx=5)
         isbn_entry.grid(row=0, column=1, pady=5)
 
         # title
         title_label = Label(top_frame, text="Title:", width=15)
-        title_entry = Entry(top_frame)
-        title_label.grid(row=0, column=2)
+        self.title = StringVar()
+        title_entry = Entry(top_frame, textvariable=self.title, font=("Arial", 10))
+        title_label.grid(row=0, column=2, padx=5)
         title_entry.grid(row=0, column=3, pady=5)
 
         ### Authors frame
@@ -69,7 +75,7 @@ class InsertBookPage(MainFrame):
         # auth entry
         self.author_var = StringVar()
         self.author_entry = Entry(
-            auth_control_frame, textvariable=self.author_var, font=("Arial", 12)
+            auth_control_frame, textvariable=self.author_var, font=("Arial", 10)
         )
         self.author_entry.grid(row=0, column=0, sticky="wn", padx=5, pady=20)
         self.author_entry.bind("<Return>", self.add_author)
@@ -123,71 +129,66 @@ class InsertBookPage(MainFrame):
 
         # address frame
         address_frame = LabelFrame(
-            self, text="Addres Detail", font=("Arial", 14, "bold")
+            self, text="Product Detail", font=("Arial", 14, "bold")
         )
         address_frame.pack(fill="x", expand="yes")
         address_frame.columnconfigure(0, weight=0)
-        address_frame.columnconfigure(1, weight=1)
+        address_frame.columnconfigure(1, weight=0)
         address_frame.columnconfigure(2, weight=0)
-        address_frame.columnconfigure(3, weight=1)
+        address_frame.columnconfigure(3, weight=0)
 
-        # address
-        address_label = Label(address_frame, text="address", width=10)
-        address_entry = Entry(
-            address_frame,
+        # Publisher
+        publisher_label = Label(address_frame, text="Publisher", width=10)
+        self.publisher = StringVar()
+        publisher_entry = Entry(
+            address_frame, textvariable=self.publisher, font=("Arial", 10)
         )
-        address_label.grid(row=0, column=0)
-        address_entry.grid(row=0, column=1, pady=5)
+        publisher_label.grid(row=0, column=0, padx=5)
+        publisher_entry.grid(row=0, column=1, pady=5)
 
-        # city
-        city_label = Label(address_frame, text="city", width=10)
-        city_entry = Entry(
-            address_frame,
-        )
-        city_label.grid(row=0, column=2)
-        city_entry.grid(row=0, column=3, pady=5)
+        # Price
+        price_label = Label(address_frame, text="Price", width=10)
+        self.price = StringVar()
+        price_entry = Entry(address_frame, textvariable=self.price, font=("Arial", 10))
+        price_label.grid(row=0, column=2, padx=5)
+        price_entry.grid(row=0, column=3, pady=5)
 
-        # state
-        state_label = Label(address_frame, text="state", width=10)
-        state_entry = Entry(
-            address_frame,
+        # Quantity
+        quantity_label = Label(address_frame, text="Quantity", width=10)
+        self.quantity = StringVar()
+        quantity_entry = Entry(
+            address_frame, textvariable=self.quantity, font=("Arial", 10)
         )
-        state_label.grid(row=1, column=0)
-        state_entry.grid(row=1, column=1, pady=5)
+        quantity_label.grid(row=1, column=0, padx=5)
+        quantity_entry.grid(row=1, column=1, pady=5)
 
-        # zip code
-        zip_label = Label(address_frame, text="Credit Card", width=10)
-        zip_entry = Entry(
-            address_frame,
-        )
+        # Year
+        zip_label = Label(address_frame, text="Publish Year", width=10)
+        self.year = StringVar()
+        zip_entry = Entry(address_frame, textvariable=self.year, font=("Arial", 10))
         zip_label.grid(row=1, column=2)
         zip_entry.grid(row=1, column=3, pady=5)
 
         # credit card frame
-        credit_frame = LabelFrame(
-            self, text="Credit Card Detail", font=("Arial", 14, "bold")
-        )
+        credit_frame = LabelFrame(self, text="Category", font=("Arial", 14, "bold"))
         credit_frame.pack(fill="x", expand="yes")
         credit_frame.columnconfigure(0, weight=0)
-        credit_frame.columnconfigure(1, weight=1)
+        credit_frame.columnconfigure(1, weight=0)
         credit_frame.columnconfigure(2, weight=0)
-        credit_frame.columnconfigure(3, weight=1)
+        credit_frame.columnconfigure(3, weight=0)
 
+        self.categoreis = get_categoreis()
         # credit card type
-        type_label = Label(credit_frame, text="Card Type")
-        type_var = tk.StringVar()
-        type_select = ttk.Combobox(credit_frame, width=15, textvariable=type_var)
-        type_label.grid(row=0, column=0)
-        type_select.grid(row=0, column=1, pady=5)
-
-        # zip code
-        card_num_label = Label(credit_frame, text="Credit Number", width=12)
-        card_num_entry = Entry(credit_frame)
-        card_num_label.grid(row=0, column=2)
-        card_num_entry.grid(row=0, column=3, pady=5)
-
-        datetime_entry = DateEntry(credit_frame)
-        datetime_entry.grid(row=0, column=4)
+        type_label = Label(credit_frame, text="Category")
+        self.category_title = tk.StringVar()
+        self.category_title.set(self.categoreis[0].title)
+        self.type_select = ttk.Combobox(
+            credit_frame, width=15, textvariable=self.category_title
+        )
+        type_label.grid(row=0, column=0, padx=5)
+        self.type_select.grid(row=0, column=1, pady=5, padx=5)
+        self.type_select["values"] = [category.title for category in self.categoreis]
+        self.type_select["state"] = "readonly"
 
         submit_button = Button(
             self,
@@ -199,8 +200,72 @@ class InsertBookPage(MainFrame):
         submit_button.pack(fill="x", expand="yes", padx=200)
 
     def insert_new_book(self):
-        pass
+        while 1:
+            if not self.title.get():
+                messagebox.showerror(title="title", message="tile must not be empty")
+                break
 
+            elif not self.isbn.get():
+                messagebox.showerror(title="isbn", message="isbn must not be empty")
+                break
+
+            elif not self.author_tree.get_children():
+                messagebox.showerror(title="author", message="author must not be empty")
+                break
+
+            elif not self.publisher.get():
+                messagebox.showerror(
+                    title="publisher", message="publisher must not be empty"
+                )
+                break
+
+            elif not self.price.get():
+                messagebox.showerror(title="price", message="price must not be empty")
+                break
+
+            elif not self.quantity.get():
+                messagebox.showerror(
+                    title="quantity", message="quantity must not be empty"
+                )
+                break
+
+            elif not self.year.get():
+                messagebox.showerror(title="year", message="yaer must not be empty")
+                break
+
+            elif not self.category_title.get():
+                messagebox.showerror(
+                    title="category", message="select a category for book"
+                )
+                break
+
+            user: Admin = self.controller.user
+            category = get_category_by_title(self.category_title.get())
+            author_list = []
+
+            for line in self.author_tree.get_children():
+                for value in self.author_tree.item(line)["values"]:
+                    author_list.append(value)
+
+            res = create_product(
+                self.isbn.get(),
+                user.user_id,
+                category.id,
+                self.title.get(),
+                self.publisher.get(),
+                self.price.get(),
+                int(self.quantity.get()),
+                self.year.get(),
+                author_list,
+            )
+
+            if res:
+                messagebox.showinfo("success", "product added success")
+                prev = self.controller.history[-2]
+                self.controller.show_frame(prev)
+            else:
+                messagebox.showerror("error", "problem adding new product")
+            break
     def add_author(self, *args):
         self.author_tree.insert("", index="end", values=(self.author_var.get()))
         self.author_entry.delete(0, END)

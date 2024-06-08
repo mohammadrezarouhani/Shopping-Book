@@ -15,8 +15,8 @@ class Phone:
 @dataclass
 class Admin:
     id: Optional[int] = None
+    user_id: Optional[int] = None
     username: Optional[str] = None
-    admin_id: Optional[int] = None
     firstname: Optional[str] = None
     lastname: Optional[str] = None
     password: Optional[str] = None
@@ -94,16 +94,17 @@ class OrderItem:
     quantity: int
     product: Optional[Product] = None
 
+
 @dataclass
 class Order:
     id: int
     customer_id: int
-    submitted:Optional[int]=None
+    submitted: Optional[int] = None
     admin_id: Optional[int] = None
-    amount: Optional[int] = None
+    amount: Optional[str] = None
     credit_card: Optional[str] = None
     order_item: List[OrderItem] = field(default_factory=list)
-    customer:Optional[Customer]=None
+    customer: Optional[Customer] = None
 
 
 @dataclass

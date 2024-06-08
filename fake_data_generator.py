@@ -5,7 +5,7 @@ from database.category import create_category, update_category
 from database.product import create_product
 from faker import Faker
 
-from database.users import create_customer
+from database.users import create_admin, create_customer
 
 f = Faker()
 
@@ -619,4 +619,22 @@ def create_fake_customer():
         )
 
 
-create_fake_customer()
+def create_fake_admin():
+    from faker import Faker
+
+    f = Faker()
+    for i in range(5):
+        create_admin(
+            f.user_name(),
+            f.first_name(),
+            f.last_name(),
+            f.password(),
+            f.address(),
+            f.city(),
+            f.state(),
+            f.zipcode(),
+            [f.phone_number() for i in range(3)],
+        )
+
+
+create_fake_admin()

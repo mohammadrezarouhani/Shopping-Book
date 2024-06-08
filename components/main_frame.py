@@ -10,12 +10,12 @@ class MainFrame(tk.Frame):
     def update_data(self):
         self.init()
 
-    @abstractmethod
-    def init(self):
-        pass
-
     def clean(self):
         for widget in self.winfo_children():
             widget.destroy()
 
         print("frame cleaned")
+
+    @abstractmethod
+    def init(self):
+        pass

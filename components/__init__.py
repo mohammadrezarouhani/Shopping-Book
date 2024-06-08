@@ -6,7 +6,7 @@ from .shopping_card import ShoppingCardPage
 from .confirm import ConfirmPage
 from .update_profile import UpdateProfile
 from .factor import FactorPage
-from .mange_book import ManageBookPage
+from .manage_book import ManageBookPage
 from .insert_book import InsertBookPage
 from .update_book import UpdateBookPage
 from .book_order import BookOrderPage

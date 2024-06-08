@@ -246,9 +246,4 @@ def init_database():
 
 
 if __name__ == "__main__":
-    # create_user_table()
-    # create_customer_table()
-    # create_card_table()
-    # create_card_item_table()
-    create_order_table()
-    create_order_item_table()
+    create_phone_table()

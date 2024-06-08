@@ -1,3 +1,4 @@
+import pdb
 from time import sleep
 from re import X
 from textwrap import fill
@@ -25,6 +26,7 @@ class FactorPage(MainFrame):
     def init(self):
         self.order = get_orders(self.controller.current_order_id)
         self.user = self.order.customer
+        pdb.set_trace()
 
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
@@ -33,7 +35,9 @@ class FactorPage(MainFrame):
         main_label = Label(self, text="Factor", font=("Arial", 16, "bold"))
         main_label.pack(fill="x", expand=True)
 
-        self.top_frame = LabelFrame(self, text="Customer Detail", font=("Arial", 10, "bold"))
+        self.top_frame = LabelFrame(
+            self, text="Customer Detail", font=("Arial", 10, "bold")
+        )
         self.top_frame.pack(fill="x", expand=True)
         self.top_frame.columnconfigure(0, weight=1)
         self.top_frame.columnconfigure(1, weight=1)
@@ -74,9 +78,7 @@ class FactorPage(MainFrame):
         card_frame.grid(row=0, column=1, padx=5, pady=2, sticky="wnes")
 
         ## credit type
-        cname_info_label = Label(
-            card_frame, text="Credit Type:", font=("Arial", 10)
-        )
+        cname_info_label = Label(card_frame, text="Credit Type:", font=("Arial", 10))
         cname_info_label.grid(row=0, column=0, pady=2, sticky="wn")
         cname_label = Label(card_frame, text=self.user.credit_type)
         cname_label.grid(row=0, column=1, sticky="w")
@@ -94,9 +96,7 @@ class FactorPage(MainFrame):
             card_frame, text="Expire Date:", font=("Arial", 10)
         )
         credit_expire_date_info_label.grid(row=2, column=0, pady=2, sticky="wn")
-        credit_expire_date_label = Label(
-            card_frame, text=self.user.credit_expire_date
-        )
+        credit_expire_date_label = Label(card_frame, text=self.user.credit_expire_date)
         credit_expire_date_label.grid(row=2, column=1, pady=2, sticky="wn")
 
         # creating a tree view
@@ -168,7 +168,9 @@ class FactorPage(MainFrame):
         price_frame.grid(row=0, column=1, sticky="wnes")
         ##
 
-        total_label = Label(price_frame, text=self.order.amount+"$", background="white")
+        total_label = Label(
+            price_frame, text=str(self.order.amount) + "$", background="white"
+        )
         total_label.grid(row=0, column=0)
         ##
 

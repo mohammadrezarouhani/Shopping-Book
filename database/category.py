@@ -3,13 +3,35 @@ from traceback import format_exc
 from .models import *
 
 
-def get_category(id):
+def get_categoreis() -> List[Category]:
+    query = f"select * from Categoreis "
+    print(query)
+    res = cursor.execute(query)
+    categoreis = res.fetchall()
+
+    return [
+        Category(category[0], category[1], category[2], category[3])
+        for category in categoreis
+    ]
+
+
+def get_category(id) -> Category:
     query = f"select * from Categoreis where id=?"
     print(query)
     res = cursor.execute(query, [id])
     category = res.fetchone()
 
     return Category(category[0], category[1], category[2], category[3])
+
+
+def get_category_by_title(title) -> Category:
+    query = f"select * from Categoreis where title=?"
+    print(query)
+    res = cursor.execute(query, [title])
+    category = res.fetchone()
+
+    return Category(category[0], category[1], category[2], category[3])
+
 
 
 def create_category(title, state, credit_type):

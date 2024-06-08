@@ -1,7 +1,8 @@
+import pdb
 from time import sleep
 from traceback import format_exc
 from database.card import get_card
-from database.product import get_product_by_id, get_products, update_product_quantity
+from database.product import get_product_by_id, update_product_quantity
 from database.users import get_customer_by_id
 from .models import *
 
@@ -15,17 +16,16 @@ def get_orders(id) -> Order:
         where Orders.id=?
     """
     print(query)
-
     res = cursor.execute(query, [id])
     orders = res.fetchall()
     customer = get_customer_by_id(orders[0][1])
 
     return Order(
-        id=orders[0][0],
-        customer_id=orders[0][1],
-        admin_id=orders[0][2],
-        amount=orders[0][3],
-        credit_card=orders[0][4],
+        orders[0][0],
+        orders[0][1],
+        orders[0][2],
+        orders[0][3],
+        orders[0][4],
         order_item=[
             OrderItem(
                 item[5],

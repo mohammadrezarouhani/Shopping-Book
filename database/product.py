@@ -16,34 +16,39 @@ def create_product(
     year: int,
     authors: list,
 ):
-    query = f"""
-        INSERT INTO Products (isbn,user_id,category_id,title,publisher,price,quantity,year) values(?,?,?,?,
-        ?,?,?,?);
-    """
+    try:
+        query = f"""
+            INSERT INTO Products (isbn,user_id,category_id,title,publisher,price,quantity,year,deleted) values(?,?,?,?,
+            ?,?,?,?,0);
+        """
 
-    print(query)
+        print(query)
 
-    cursor.execute(
-        query,
-        [isbn, user_id, category_id, title, publisher, price, quantity, year, authors],
-    )
-    sqliteConnection.commit()
-    product_id = cursor.lastrowid
-    authors_list = []
-
-    for a in authors:
-        if len(a.split()) > 1:
-            firstname = a.split(" ")[0]
-            lastname = a.split(" ")[1]
-        else:
-            firstname = a
-            lastname = ""
-
-        query = f"insert into Authors (product_id,firstname,lastname) values(?,?,?)"
-
-        cursor.execute(query, [product_id, firstname, lastname])
+        cursor.execute(
+            query, [isbn, user_id, category_id, title, publisher, price, quantity, year]
+        )
         sqliteConnection.commit()
-        authors_list.append(Author(cursor.lastrowid, product_id, firstname, lastname))
+        product_id = cursor.lastrowid
+        authors_list = []
+
+        for a in authors:
+            if len(a.split()) > 1:
+                firstname = a.split(" ")[0]
+                lastname = a.split(" ")[1]
+            else:
+                firstname = a
+                lastname = ""
+
+            query = f"insert into Authors (product_id,firstname,lastname) values(?,?,?)"
+
+            cursor.execute(query, [product_id, firstname, lastname])
+            sqliteConnection.commit()
+            authors_list.append(
+                Author(cursor.lastrowid, product_id, firstname, lastname)
+            )
+    except:
+        print(format_exc())
+        return False
 
     return Product(
         cursor.lastrowid,
@@ -61,12 +66,12 @@ def create_product(
 
 
 def update_product(
-    id, category_id, title, publisher, price, quantity, year, authors: List[Author]
+    id, category_id, title, publisher, price, quantity, year, authors: List[str]
 ) -> bool:
     try:
         query = f"""
                     update Products set category_id=?, title=?,
-                    publisher=?,price='?,quantity='?',year='?'
+                    publisher=?,price=?,quantity=?,year=?
                     where id=?
                 """
         print(query)
@@ -77,15 +82,20 @@ def update_product(
         sqliteConnection.commit()
 
         query1 = "delete from Authors where product_id=?"
-        cursor.execute(query1)
+        cursor.execute(query1, [id])
         sqliteConnection.commit()
 
         for author in authors:
             query2 = "insert into Authors (product_id,firstname,lastname) values(?,?,?)"
-            print(query2)
-            cursor.execute(
-                query, [author.product_id, author.firstname, author.lastname]
-            )
+            name = author.split(" ")
+            if len(name) > 1:
+                firstname = name[0]
+                lastname = name[1]
+            else:
+                firstname = author
+                lastname = ""
+
+            cursor.execute(query2, [id, firstname, lastname])
 
         return True
     except:
@@ -93,7 +103,38 @@ def update_product(
         return False
 
 
-def get_products() -> List[Product]:
+def get_all_user_products(user_id) -> List[Product]:
+    try:
+        query = """
+            SELECT * FROM Products
+            INNER JOIN Categoreis ON Products.category_id = Categoreis.id
+            WHERE Products.user_id=?
+        """
+        print(query)
+        res = cursor.execute(query, [user_id])
+
+        return [
+            Product(
+                item[0],
+                item[1],
+                item[2],
+                item[3],
+                item[4],
+                item[5],
+                item[6],
+                item[7],
+                item[8],
+                item[9],
+                Category(item[10], item[11], item[12], item[13]),
+            )
+            for item in res.fetchall()
+        ]
+    except:
+        print(format_exc())
+        return False
+
+
+def get_all_products():
     try:
         query = """
             SELECT * FROM Products
@@ -124,16 +165,47 @@ def get_products() -> List[Product]:
         return False
 
 
-def get_product_by_id(id) -> List[Product]:
+def get_deleted_user_products(user_id) -> List[Product]:
     try:
         query = """
             SELECT * FROM Products
             INNER JOIN Categoreis ON Products.category_id = Categoreis.id
-            WHERE Products.deleted=0  and id=?
+            WHERE Products.deleted=0 AND Products.user_id=?
         """
         print(query)
-        res = cursor.execute(query, [id])
-        item = cursor.fetchone()
+        res = cursor.execute(query, [user_id])
+
+        return [
+            Product(
+                item[0],
+                item[1],
+                item[2],
+                item[3],
+                item[4],
+                item[5],
+                item[6],
+                item[7],
+                item[8],
+                item[9],
+                Category(item[10], item[11], item[12], item[13]),
+            )
+            for item in res.fetchall()
+        ]
+    except:
+        print(format_exc())
+        return False
+
+
+def get_product_by_id(product_id) -> Product:
+    try:
+        query = """
+            SELECT * FROM Products
+            LEFT JOIN Categoreis ON Products.category_id = Categoreis.id
+            WHERE Products.id=?
+        """
+        print(query)
+        res = cursor.execute(query, [product_id])
+        item = res.fetchone()
 
         return Product(
             item[0],
@@ -225,3 +297,30 @@ def update_product_quantity(id, quantity):
     except:
         print(format_exc())
         return False
+
+
+def delete_product(id):
+    try:
+        query = "update Products set deleted=-1 where id=?"
+        cursor.execute(query, [id])
+        sqliteConnection.commit()
+        return True
+    except:
+        print(format_exc)
+        return False
+
+
+def get_author_by_product(product_id) -> List[Author]:
+    query = "select * from Authors where product_id=?"
+    res = cursor.execute(query, [product_id])
+    authors = res.fetchall()
+
+    return [
+        Author(
+            author[0],
+            author[1],
+            author[2],
+            author[3],
+        )
+        for author in authors
+    ]

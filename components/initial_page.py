@@ -70,7 +70,7 @@ class StartPage(MainFrame):
                 width=25,
                 background="white",
             )
-            manage_book_button.grid(row=0, column=0, padx=10, pady=10)
+            manage_book_button.grid(row=1, column=0, padx=10, pady=10)
 
             # manage orders
             manage_order_button = tk.Button(
@@ -82,7 +82,7 @@ class StartPage(MainFrame):
                 width=25,
                 background="white",
             )
-            manage_order_button.grid(row=1, column=0, padx=10, pady=10)
+            manage_order_button.grid(row=2, column=0, padx=10, pady=10)
 
             # reports
             report_button = tk.Button(
@@ -94,7 +94,7 @@ class StartPage(MainFrame):
                 width=25,
                 background="white",
             )
-            report_button.grid(row=2, column=0, padx=10, pady=10)
+            report_button.grid(row=3, column=0, padx=10, pady=10)
 
             # system maintanance
             system_button = tk.Button(
@@ -106,7 +106,7 @@ class StartPage(MainFrame):
                 width=25,
                 background="white",
             )
-            system_button.grid(row=3, column=0, padx=10, pady=10)
+            system_button.grid(row=4, column=0, padx=10, pady=10)
         elif isinstance(self.controller.user, Customer):
             # create continue as guest
             shop_button = tk.Button(

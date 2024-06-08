@@ -36,9 +36,8 @@ def filter_category(title: str):
         query = f"select * from Categoreis where title like ?"
         print(query)
         res = cursor.execute(query, [title + "%"])
-        category = res.fetchone()
-        pdb.set_trace()
-        return Category(*category)
+        categoreis = res.fetchall()
+        return [Category(*category) for category in categoreis]
     except:
         print(format_exc())
         return False

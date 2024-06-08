@@ -246,4 +246,4 @@ def init_database():
 
 
 if __name__ == "__main__":
-    create_phone_table()
+    init_database()

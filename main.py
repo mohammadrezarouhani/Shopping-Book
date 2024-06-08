@@ -38,7 +38,8 @@ class MainApplication(tk.Tk):
         self.user: Customer | Admin = None
         self.current_order_id = None
         self.current_product_id = None
-
+        self.current_category=None
+        
         style = ttk.Style(self)
         style.configure("Treeview", rowheight=40)
 
@@ -79,7 +80,6 @@ class MainApplication(tk.Tk):
         self.show_frame("StartPage")
 
     def show_frame(self, page_name):
-
         if len(self.history) > 1:
             prev = self.history[-1]
             prev_frame = self.frames[prev]

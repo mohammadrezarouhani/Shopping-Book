@@ -24,16 +24,9 @@ from tkinter import messagebox
 
 from database.category import (
     create_category,
-    get_categoreis,
-    get_category,
-    get_category_by_title,
 )
-from database.models import Admin
-from database.product import create_product
 
 from .main_frame import MainFrame
-
-from .datetime_entry import DateEntry
 
 
 class InsertCategoryPage(MainFrame):
@@ -42,29 +35,27 @@ class InsertCategoryPage(MainFrame):
         st.configure("C.Treeview", rowheight=18)
 
         # main label
-        main_label = Label(self, text="Insert New Book", font=("Arial", 16, "bold"))
+        main_label = Label(self, text="Insert New Category", font=("Arial", 16, "bold"))
         main_label.pack(fill="x", expand=True)
 
         top_frame = Frame(self)
         top_frame.pack(fill="x", expand="yes")
-        top_frame.columnconfigure(0, weight=0)
-        top_frame.columnconfigure(1, weight=0)
-        top_frame.columnconfigure(2, weight=0)
-        top_frame.columnconfigure(3, weight=0)
+        top_frame.columnconfigure(0, weight=1)
+        top_frame.columnconfigure(1, weight=1)
 
         # Title:
         self.title = StringVar()
-        title_label = Label(top_frame, text="Title:", width=10)
+        title_label = Label(top_frame, text="Title:", width=15)
         title_entry = Entry(top_frame, textvariable=self.title, font=("Arial", 10))
-        title_label.grid(row=0, column=0, padx=5)
-        title_entry.grid(row=0, column=1, pady=5)
+        title_label.grid(row=0, column=0, padx=5, sticky="e")
+        title_entry.grid(row=0, column=1, pady=5, sticky="w")
 
         # State:
         state_label = Label(top_frame, text="State:", width=15)
         self.state = StringVar()
         state_entry = Entry(top_frame, textvariable=self.state, font=("Arial", 10))
-        state_label.grid(row=1, column=2, padx=5)
-        state_entry.grid(row=1, column=3, pady=5)
+        state_label.grid(row=1, column=0, padx=5, sticky="e")
+        state_entry.grid(row=1, column=1, pady=5, sticky="w")
 
         # Credit Type:
         state_label = Label(top_frame, text="Credit Type:", width=15)
@@ -72,8 +63,8 @@ class InsertCategoryPage(MainFrame):
         state_entry = Entry(
             top_frame, textvariable=self.creadit_type, font=("Arial", 10)
         )
-        state_label.grid(row=2, column=2, padx=5)
-        state_entry.grid(row=2, column=3, pady=5)
+        state_label.grid(row=2, column=0, padx=5, sticky="e")
+        state_entry.grid(row=2, column=1, pady=5, sticky="w")
 
         submit_button = Button(
             self,

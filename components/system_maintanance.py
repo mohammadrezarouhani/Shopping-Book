@@ -192,7 +192,7 @@ class SystemPage(MainFrame):
                 self.category_tree.delete(item)
                 delete_category(int(item))
 
-            self.products = get_categoreis()
+            self.categoreis = get_categoreis()
             self.clean_table()
             self.insert_category_item()
 
@@ -202,7 +202,7 @@ class SystemPage(MainFrame):
 
     def modify(self):
         for id in self.category_tree.selection():
-            self.controller.current_product_id = int(id)
+            self.controller.current_category = int(id)
             self.controller.show_frame("UpdateCategoryPage")
             break
         else:

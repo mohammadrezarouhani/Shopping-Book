@@ -47,12 +47,7 @@ class LoginPage(MainFrame):
             background="white",
             font=("arial", 12),
         )
-        button2.grid(row=3, column=0, padx=200, pady=10, sticky="e")
-
-        # self.type = tk.StringVar()
-        # self.type_user = Combobox(self, width=18, textvariable=self.type)
-        # self.type_user.grid(row=4, column=0, padx=200, pady=10, sticky="e")
-        # self.type_user["values"] = ["admin", "customer"]
+        button2.grid(row=3, column=0, padx=100)
 
     def sign_in(self):
         username = self.username_state.get()

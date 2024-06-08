@@ -145,6 +145,7 @@ class UpdateBookPage(MainFrame):
 
         author = get_author_by_product(self.product.id)
         self.add_custom_author(author)
+        
         # Publisher
         publisher_label = Label(address_frame, text="Publisher", width=10)
         self.publisher = StringVar()

@@ -39,7 +39,7 @@ class UpdateProfile(MainFrame):
             self.username.set(self.user.username)
             username_label = Label(credential_frame, text="username", width=10)
             username_entry = Entry(
-                credential_frame, text=self.user.username, state="disabled"
+                credential_frame, textvariable=self.username,state='disabled'
             )
             username_label.grid(row=0, column=0)
             username_entry.grid(row=0, column=1, pady=5, padx=5)

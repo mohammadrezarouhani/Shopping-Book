@@ -29,22 +29,10 @@ def get_orders(id) -> Order:
         orders[0][5],
         order_item=[
             OrderItem(
-                item[6],
-                item[7],
-                item[8],
-                item[9],
+                *item[6:10],
                 Product(
-                    item[10],
-                    item[11],
-                    item[12],
-                    item[13],
-                    item[14],
-                    item[15],
-                    item[16],
-                    item[17],
-                    item[18],
-                    item[19],
-                    category=Category(item[20], item[21], item[21], item[22]),
+                    *item[10:20],
+                    category=Category(*item[20:]),
                 ),
             )
             for item in orders
@@ -53,10 +41,10 @@ def get_orders(id) -> Order:
     )
 
 
-def update_order(id, submit: int) -> bool:
+def update_order(id: int, submit: int) -> bool:
     try:
-        query = f"""update Order set submit={submit} where id={id}"""
-        cursor.execute(query)
+        query = "update Orders set submit=? where id=?"
+        cursor.execute(query, [submit, id])
         sqliteConnection.commit()
         return True
     except:
@@ -104,17 +92,34 @@ def create_order_item(order_id, product_id, quantity):
         return False
 
 
-def get_all_orders():
+def get_all_orders() -> List[MainOrder]:
     query = f"""
-        select * from Orders 
+        select * from Orders
+        inner join Customers on Orders.user_id=Customers.user_id
+        inner join Users on Customers.user_id=Users.id
     """
     print(query)
     res = cursor.execute(query)
     orders = res.fetchall()
     order_list = []
-    pdb.set_trace()
+
     for order in orders:
-        customer = get_customer_by_id(order[0][1])
-        order_list.append(
-            Order(order[0], order[1], order[2], order[3], order[4], order[5])
-        )
+        order_list.append(MainOrder(*order[0:6], Customer(*order[6:11], *order[12:])))
+    return order_list
+
+
+def get_order_by_customer_username(username) -> List[MainOrder]:
+    query = f"""
+        select * from Orders
+        inner join Customers on Orders.user_id=Customers.user_id
+        inner join Users on Customers.user_id=Users.id
+        where Users.username like ?
+    """
+    print(query)
+    res = cursor.execute(query, [username + "%"])
+    orders = res.fetchall()
+    order_list = []
+    for order in orders:
+        order_list.append(MainOrder(*order[0:6], Customer(*order[6:11], *order[12:])))
+
+    return order_list

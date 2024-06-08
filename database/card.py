@@ -32,27 +32,10 @@ def get_card(user_id) -> Card:
             if item[2] != None:
                 card_items.append(
                     CardItem(
-                        item[2],
-                        item[3],
-                        item[4],
-                        item[5],
+                        *item[2:6],
                         Product(
-                            item[6],
-                            item[7],
-                            item[8],
-                            item[9],
-                            item[10],
-                            item[11],
-                            item[12],
-                            item[13],
-                            item[14],
-                            item[15],
-                            Category(
-                                item[16],
-                                item[17],
-                                item[18],
-                                item[19],
-                            ),
+                            *item[6:16],
+                            Category(*item[16:]),
                         ),
                     )
                 )
@@ -86,7 +69,7 @@ def delete_card_item(item_id, card_id) -> List[CardItem]:
         res = cursor.execute(query)
         items = res.fetchall()
 
-        return [CardItem(item[0], item[1], item[2], item[3]) for item in items]
+        return [CardItem(*item[0:]) for item in items]
     except:
         print(format_exc())
         return False
@@ -114,26 +97,11 @@ def get_card_item(product_id, card_id) -> CardItem:
 
     if item:
         return CardItem(
-            item[0],
-            item[1],
-            item[2],
-            item[3],
+            *item[0:4],
             Product(
-                item[4],
-                item[5],
-                item[6],
-                item[7],
-                item[8],
-                item[9],
-                item[10],
-                item[11],
-                item[12],
-                item[13],
+                *item[4:14],
                 Category(
-                    item[14],
-                    item[15],
-                    item[16],
-                    item[17],
+                    *item[14:],
                 ),
             ),
         )
@@ -155,7 +123,7 @@ def update_card_item(product_id, card_id, quantity) -> CardItem:
 
 
 def clear_card(id):
-    query="delete from CardItems where card_id=?"
-    cursor.execute(query,[id])
+    query = "delete from CardItems where card_id=?"
+    cursor.execute(query, [id])
     sqliteConnection.commit()
     return True

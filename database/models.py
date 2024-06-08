@@ -108,6 +108,17 @@ class Order:
 
 
 @dataclass
+class MainOrder:
+    id: int
+    customer_id: int
+    submitted: Optional[int] = None
+    admin_id: Optional[int] = None
+    amount: Optional[str] = None
+    credit_card: Optional[str] = None
+    customer: Optional[Customer] = None
+
+
+@dataclass
 class Review:
     id: int
     order_id: int

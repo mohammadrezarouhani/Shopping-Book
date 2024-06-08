@@ -115,17 +115,8 @@ def get_all_user_products(user_id) -> List[Product]:
 
         return [
             Product(
-                item[0],
-                item[1],
-                item[2],
-                item[3],
-                item[4],
-                item[5],
-                item[6],
-                item[7],
-                item[8],
-                item[9],
-                Category(item[10], item[11], item[12], item[13]),
+                *item[0:10],
+                Category(*item[10:]),
             )
             for item in res.fetchall()
         ]
@@ -146,17 +137,8 @@ def get_all_products():
 
         return [
             Product(
-                item[0],
-                item[1],
-                item[2],
-                item[3],
-                item[4],
-                item[5],
-                item[6],
-                item[7],
-                item[8],
-                item[9],
-                Category(item[10], item[11], item[12], item[13]),
+                *item[0:10],
+                Category(*item[10:]),
             )
             for item in res.fetchall()
         ]
@@ -177,17 +159,8 @@ def get_deleted_user_products(user_id) -> List[Product]:
 
         return [
             Product(
-                item[0],
-                item[1],
-                item[2],
-                item[3],
-                item[4],
-                item[5],
-                item[6],
-                item[7],
-                item[8],
-                item[9],
-                Category(item[10], item[11], item[12], item[13]),
+                *item[0:10],
+                Category(*item[10:]),
             )
             for item in res.fetchall()
         ]
@@ -208,17 +181,8 @@ def get_product_by_id(product_id) -> Product:
         item = res.fetchone()
 
         return Product(
-            item[0],
-            item[1],
-            item[2],
-            item[3],
-            item[4],
-            item[5],
-            item[6],
-            item[7],
-            item[8],
-            item[9],
-            Category(item[10], item[11], item[12], item[13]),
+            *item[0:10],
+            Category(*item[10:]),
         )
     except:
         print(format_exc())
@@ -239,17 +203,8 @@ def filter_product(sr) -> List[Product]:
 
         return [
             Product(
-                item[0],
-                item[1],
-                item[2],
-                item[3],
-                item[4],
-                item[5],
-                item[6],
-                item[7],
-                item[8],
-                item[9],
-                Category(item[10], item[11], item[12], item[13]),
+                *item[0:10],
+                Category(*item[10:]),
             )
             for item in res.fetchall()
         ]
@@ -270,17 +225,8 @@ def get_single_product(id) -> Product:
         product = res.fetchone()
 
         return Product(
-            product[0],
-            product[1],
-            product[2],
-            product[3],
-            product[4],
-            product[5],
-            product[6],
-            product[7],
-            product[8],
-            product[9],
-            Category(product[10], product[11], product[12], product[13]),
+            *product[0:10],
+            Category(*product[10:]),
         )
 
     except:
@@ -317,10 +263,7 @@ def get_author_by_product(product_id) -> List[Author]:
 
     return [
         Author(
-            author[0],
-            author[1],
-            author[2],
-            author[3],
+            *author[0:],
         )
         for author in authors
     ]

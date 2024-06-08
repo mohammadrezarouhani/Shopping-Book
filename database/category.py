@@ -1,3 +1,4 @@
+import pdb
 from tkinter.messagebox import RETRY
 from traceback import format_exc
 from .models import *
@@ -9,10 +10,7 @@ def get_categoreis() -> List[Category]:
     res = cursor.execute(query)
     categoreis = res.fetchall()
 
-    return [
-        Category(category[0], category[1], category[2], category[3])
-        for category in categoreis
-    ]
+    return [Category(*category) for category in categoreis]
 
 
 def get_category(id) -> Category:
@@ -21,7 +19,7 @@ def get_category(id) -> Category:
     res = cursor.execute(query, [id])
     category = res.fetchone()
 
-    return Category(category[0], category[1], category[2], category[3])
+    return Category(*category)
 
 
 def get_category_by_title(title) -> Category:
@@ -30,8 +28,20 @@ def get_category_by_title(title) -> Category:
     res = cursor.execute(query, [title])
     category = res.fetchone()
 
-    return Category(category[0], category[1], category[2], category[3])
+    return Category(*category)
 
+
+def filter_category(title: str):
+    try:
+        query = f"select * from Categoreis where title like ?"
+        print(query)
+        res = cursor.execute(query, [title + "%"])
+        category = res.fetchone()
+        pdb.set_trace()
+        return Category(*category)
+    except:
+        print(format_exc())
+        return False
 
 
 def create_category(title, state, credit_type):
@@ -55,4 +65,15 @@ def update_category(id, title, state, credit_type):
         return Category(id, title, state, credit_type)
 
     except:
+        return False
+
+
+def delete_category(id):
+    try:
+        query = "delete from Categoreis where id=?"
+        cursor.execute(query, [id])
+        sqliteConnection.commit()
+        return True
+    except:
+        print(format_exc())
         return False

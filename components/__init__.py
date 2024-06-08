@@ -14,3 +14,5 @@ from .book_order import BookOrderPage
 # not completed
 from .system_maintanance import SystemPage
 from .report import ReportPage
+from .add_category import InsertCategoryPage
+from .update_category import UpdateCategoryPage

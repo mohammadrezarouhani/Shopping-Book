@@ -1,3 +1,4 @@
+import pdb
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import (
@@ -16,7 +17,12 @@ from tkinter import (
 )
 
 from database.models import Admin
-from database.order import get_all_orders, get_orders
+from database.order import (
+    get_all_orders,
+    get_order_by_customer_username,
+    get_orders,
+    update_order,
+)
 from database.product import delete_product, filter_product, get_all_user_products
 
 from .main_frame import MainFrame
@@ -70,20 +76,20 @@ class BookOrderPage(MainFrame):
         tree_scroll.pack(side=RIGHT, fill=Y)
 
         # creating tree view
-        self.book_tree = ttk.Treeview(
+        self.order_tree = ttk.Treeview(
             tree_frame,
             yscrollcommand=tree_scroll.set,
             selectmode="extended",
             show="headings",
-            height=5,
+            height=7,
         )
-        self.book_tree.pack(fill="both", expand=True)
+        self.order_tree.pack(fill="both", expand=True)
 
         # configure scrollbar
-        tree_scroll.config(command=self.book_tree.yview)
+        tree_scroll.config(command=self.order_tree.yview)
 
         # set three headers
-        self.book_tree["columns"] = (
+        self.order_tree["columns"] = (
             "Customer",
             "Credit Card",
             "Total Price",
@@ -91,93 +97,96 @@ class BookOrderPage(MainFrame):
         )
 
         # set tree columns
-        self.book_tree.column("#0", width=0, stretch=NO)
-        self.book_tree.column("Customer", anchor=CENTER, width=100)
-        self.book_tree.column("Credit Card", anchor=CENTER, width=130)
-        self.book_tree.column("Total Price", anchor=CENTER, width=130)
-        self.book_tree.column("Submit", anchor=CENTER, width=100)
+        self.order_tree.column("#0", width=0, stretch=NO)
+        self.order_tree.column("Customer", anchor=CENTER, width=100)
+        self.order_tree.column("Credit Card", anchor=CENTER, width=130)
+        self.order_tree.column("Total Price", anchor=CENTER, width=130)
+        self.order_tree.column("Submit", anchor=CENTER, width=100)
 
         # set hedings
-        self.book_tree.heading("Customer", text="Customer", anchor=CENTER)
-        self.book_tree.heading("Credit Card", text="Credit Card", anchor=CENTER)
-        self.book_tree.heading("Total Price", text="Total Price", anchor=CENTER)
-        self.book_tree.heading("Submit", text="Submit", anchor=CENTER)
+        self.order_tree.heading("Customer", text="Customer", anchor=CENTER)
+        self.order_tree.heading("Credit Card", text="Credit Card", anchor=CENTER)
+        self.order_tree.heading("Total Price", text="Total Price", anchor=CENTER)
+        self.order_tree.heading("Submit", text="Submit", anchor=CENTER)
 
         # set tree tags
-        self.book_tree.tag_configure("odd", background="white")
-        self.book_tree.tag_configure("even", background="lightblue")
+        self.order_tree.tag_configure("odd", background="white")
+        self.order_tree.tag_configure("even", background="lightblue")
 
         # Order Frame
         card_frame = Frame(self)
         card_frame.pack(fill="x", expand="yes", padx=10)
-        card_frame.grid_columnconfigure(0, weight=1)
+
+        submit_button = Button(
+            card_frame,
+            text="Submit",
+            command=self.submit_order,
+            foreground="green",
+            background="white",
+        )
+        submit_button.pack(expand=True, fill="x", padx=100)
 
         self.user: Admin = self.controller.user
-        self.orders = get_all_orders(self.user.id)
+        self.orders = get_all_orders()
+        self.insert_book_item()
 
     def insert_book_item(self):
-        for index, p in enumerate(self.products):
+        for index, orders in enumerate(self.orders):
             if index % 2 == 0:
-                self.book_tree.insert(
+                self.order_tree.insert(
                     parent="",
                     index="end",
-                    iid=p.id,
+                    iid=orders.id,
                     text="",
                     values=(
-                        p.isbn,
-                        p.title,
-                        p.publisher,
-                        p.price,
-                        bool(p.deleted == -1),
+                        orders.customer.username,
+                        orders.credit_card,
+                        orders.amount,
+                        bool(orders.submitted == 1),
                     ),
                     tags="odd",
                 )
 
             else:
-                self.book_tree.insert(
+                self.order_tree.insert(
                     parent="",
                     index="end",
-                    iid=p.id,
+                    iid=orders.id,
                     text="",
                     values=(
-                        p.isbn,
-                        p.title,
-                        p.publisher,
-                        p.price,
-                        bool(p.deleted == -1),
+                        orders.customer.username,
+                        orders.credit_card,
+                        orders.amount,
+                        bool(orders.submitted == 1),
                     ),
                     tags="even",
                 )
 
     def search(self, *args):
-        pass
+        self.clean_table()
+        self.orders = get_order_by_customer_username(self.text_var.get())
+        self.insert_book_item()
 
-    def delete_book(self):
-        selection = self.book_tree.selection()
+    def clean_table(self):
+        for item in self.order_tree.get_children():
+            self.order_tree.delete(item)
 
+    def submit_order(self):
         if (
-            len(selection)
-            and messagebox.askquestion(
-                "askquestion", f"Are you sure deleting {len(selection)} item?"
+            messagebox.askquestion(
+                "submit", "are you sure about submitting selected products"
             )
             == "yes"
         ):
-            for item in selection:
-                self.book_tree.delete(item)
-                delete_product(int(item))
+            for item in self.order_tree.selection():
+                res = update_order(int(item), 1)
+                if not res:
+                    break
+            else:
+                messagebox.showinfo("success", "submitting was success!")
+                self.clean_table()
+                self.orders = get_all_orders()
+                self.insert_book_item()
+                return
 
-            self.products = get_all_user_products(self.user.user_id)
-            self.clean_table()
-            self.insert_book_item()
-
-    def clean_table(self):
-        for item in self.book_tree.get_children():
-            self.book_tree.delete(item)
-
-    def modify(self):
-        for id in self.book_tree.selection():
-            self.controller.current_product_id = int(id)
-            self.controller.show_frame("UpdateBookPage")
-            break
-        else:
-            messagebox.showinfo("no selecteditem", "select a book inorder to modify")
+            messagebox.showerror("error", "problem submitting orders")

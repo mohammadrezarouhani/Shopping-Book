@@ -14,16 +14,17 @@ class Phone:
 
 @dataclass
 class Admin:
-    id: int
-    username: str
-    admin_id: int
-    firstname: str = None
-    lastname: str = None
-    password: str = None
-    address: str = None
-    city: str = None
-    state: str = None
-    role: str = None
+    id: Optional[int] = None
+    username: Optional[str] = None
+    admin_id: Optional[int] = None
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    password: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    zip_code: Optional[str] = None
+    role: Optional[str] = None
     phones: Optional[List[Phone]] = None
 
 
@@ -70,13 +71,17 @@ class Card:
 class Customer:
     id: Optional[int] = None
     user_id: Optional[int] = None
-    username: Optional[str] = None
+    credit_type: Optional[str] = None
+    credit_card: Optional[str] = None
+    credit_expire_date: Optional[int] = None
     firstname: Optional[str] = None
     lastname: Optional[str] = None
+    username: Optional[str] = None
     password: Optional[str] = None
     address: Optional[str] = None
     city: Optional[str] = None
     state: Optional[str] = None
+    zip_code: Optional[str] = None
     role: Optional[str] = None
     card: Optional[Card] = None
 
@@ -87,13 +92,18 @@ class OrderItem:
     order_id: int
     product_id: int
     quantity: int
-
+    product: Optional[Product] = None
 
 @dataclass
 class Order:
     id: int
     customer_id: int
+    submitted:Optional[int]=None
+    admin_id: Optional[int] = None
+    amount: Optional[int] = None
+    credit_card: Optional[str] = None
     order_item: List[OrderItem] = field(default_factory=list)
+    customer:Optional[Customer]=None
 
 
 @dataclass

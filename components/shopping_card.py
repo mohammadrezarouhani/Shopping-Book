@@ -22,9 +22,7 @@ from .main_frame import MainFrame
 
 
 class ShoppingCardPage(MainFrame):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-
+    def init(self):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
@@ -115,8 +113,6 @@ class ShoppingCardPage(MainFrame):
             width=10,
         )
         del_button.pack(side="right", padx=5)
-
-    def init(self):
         self.remove_from_tree()
         self.card: Card = self.controller.user.card
         self.insert_book_item()

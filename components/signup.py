@@ -10,9 +10,7 @@ from .datetime_entry import DateEntry
 
 
 class SignUpPage(MainFrame):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-        
+    def init(self):
         main_label=Label(self,text="SignUp",font=("Arial",16,"bold"))
         main_label.pack(fill='x',expand=True)
 

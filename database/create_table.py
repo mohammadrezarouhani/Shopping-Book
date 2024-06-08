@@ -14,6 +14,7 @@ def create_user_table():
                 address varchar(512),
                 city varchar(115),
                 state carchar(115),
+                zip_code carchar(115),
                 role varchar(115)
             );
         """
@@ -46,6 +47,9 @@ def create_customer_table():
             (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
+                credit_type varchar(115),
+                credit_card varchar(115),
+                credit_expire_date,
                 FOREIGN KEY (user_id) REFERENCES Users(id)
             );
         """
@@ -122,7 +126,11 @@ def create_order_table():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
                 submit INTEGER,
+                admin_id INTEGER,
+                amount str,
+                credit_card str,
                 FOREIGN KEY (user_id) REFERENCES Users(id)
+                FOREIGN KEY (admin_id) REFERENCES Admins(id)
             );
         """
     print(query)
@@ -238,4 +246,9 @@ def init_database():
 
 
 if __name__ == "__main__":
-    create_card_item_table()
+    # create_user_table()
+    # create_customer_table()
+    # create_card_table()
+    # create_card_item_table()
+    create_order_table()
+    create_order_item_table()

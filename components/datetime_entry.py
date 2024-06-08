@@ -1,19 +1,28 @@
 import tkinter as tk
 
+
 class DateEntry(tk.Frame):
-    def __init__(self, master, frame_look={}, **look):
+    def __init__(self, master, year="", month="", day="", frame_look={}, **look):
         args = dict(relief=tk.SUNKEN, border=1)
         args.update(frame_look)
         tk.Frame.__init__(self, master, **args)
 
-        args = {'relief': tk.FLAT}
+        args = {"relief": tk.FLAT}
         args.update(look)
 
-        self.entry_1 = tk.Entry(self, width=2, **args)
-        self.label_1 = tk.Label(self, text='/', **args)
-        self.entry_2 = tk.Entry(self, width=2, **args)
-        self.label_2 = tk.Label(self, text='/', **args)
-        self.entry_3 = tk.Entry(self, width=4, **args)
+        self.year = tk.StringVar()
+        self.year.set(year)
+
+        self.month = tk.StringVar()
+        self.month.set(month)
+
+        self.day = tk.StringVar()
+        self.day.set(day)
+        self.entry_1 = tk.Entry(self, width=2, textvariable=self.year, **args)
+        self.label_1 = tk.Label(self, text="/", **args)
+        self.entry_2 = tk.Entry(self, width=2, textvariable=self.month, **args)
+        self.label_2 = tk.Label(self, text="/", **args)
+        self.entry_3 = tk.Entry(self, width=4, textvariable=self.day, **args)
 
         self.entry_1.pack(side=tk.LEFT)
         self.label_1.pack(side=tk.LEFT)
@@ -23,9 +32,9 @@ class DateEntry(tk.Frame):
 
         self.entries = [self.entry_1, self.entry_2, self.entry_3]
 
-        self.entry_1.bind('<KeyRelease>', lambda e: self._check(0, 2))
-        self.entry_2.bind('<KeyRelease>', lambda e: self._check(1, 2))
-        self.entry_3.bind('<KeyRelease>', lambda e: self._check(2, 4))
+        self.entry_1.bind("<KeyRelease>", lambda e: self._check(0, 2))
+        self.entry_2.bind("<KeyRelease>", lambda e: self._check(1, 2))
+        self.entry_3.bind("<KeyRelease>", lambda e: self._check(2, 4))
 
     def _backspace(self, entry):
         cont = entry.get()
@@ -35,7 +44,9 @@ class DateEntry(tk.Frame):
     def _check(self, index, size):
         entry = self.entries[index]
         next_index = index + 1
-        next_entry = self.entries[next_index] if next_index < len(self.entries) else None
+        next_entry = (
+            self.entries[next_index] if next_index < len(self.entries) else None
+        )
         data = entry.get()
 
         if len(data) > size or not data.isdigit():

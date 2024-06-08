@@ -13,3 +13,9 @@ class MainFrame(tk.Frame):
     @abstractmethod
     def init(self):
         pass
+
+    def clean(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+
+        print("frame cleaned")

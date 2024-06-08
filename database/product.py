@@ -98,7 +98,7 @@ def get_products() -> List[Product]:
         query = """
             SELECT * FROM Products
             INNER JOIN Categoreis ON Products.category_id = Categoreis.id
-            WHERE Products.deleted=0 LIMIT 100
+            WHERE Products.deleted=0 
         """
         print(query)
         res = cursor.execute(query)
@@ -119,6 +119,35 @@ def get_products() -> List[Product]:
             )
             for item in res.fetchall()
         ]
+    except:
+        print(format_exc())
+        return False
+
+
+def get_product_by_id(id) -> List[Product]:
+    try:
+        query = """
+            SELECT * FROM Products
+            INNER JOIN Categoreis ON Products.category_id = Categoreis.id
+            WHERE Products.deleted=0  and id=?
+        """
+        print(query)
+        res = cursor.execute(query, [id])
+        item = cursor.fetchone()
+
+        return Product(
+            item[0],
+            item[1],
+            item[2],
+            item[3],
+            item[4],
+            item[5],
+            item[6],
+            item[7],
+            item[8],
+            item[9],
+            Category(item[10], item[11], item[12], item[13]),
+        )
     except:
         print(format_exc())
         return False
@@ -182,6 +211,17 @@ def get_single_product(id) -> Product:
             Category(product[10], product[11], product[12], product[13]),
         )
 
+    except:
+        print(format_exc())
+        return False
+
+
+def update_product_quantity(id, quantity):
+    try:
+        query = "update Products set quantity=? where id=?"
+        cursor.execute(query, [quantity, id])
+        sqliteConnection.commit()
+        return True
     except:
         print(format_exc())
         return False

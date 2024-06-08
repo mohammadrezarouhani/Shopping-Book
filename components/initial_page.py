@@ -5,11 +5,9 @@ from database.models import Admin, Customer
 
 
 class StartPage(MainFrame):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-        
+    def init(self):
         self.columnconfigure(0, weight=1)
-        
+
         # create button style
         style = ttk.Style()
         style.configure(
@@ -24,8 +22,6 @@ class StartPage(MainFrame):
         )
         label.grid(row=0, column=0, padx=10, pady=30)
 
-
-    def init(self):
         print(self.controller.user)
         if not self.controller.logged_in:
             # create continue as guest
@@ -147,4 +143,3 @@ class StartPage(MainFrame):
                 background="white",
             )
             sign_up_button.grid(row=3, column=0, padx=10, pady=10)
-

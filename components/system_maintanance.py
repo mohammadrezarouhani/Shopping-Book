@@ -23,9 +23,7 @@ from .main_frame import MainFrame
 
 
 class SystemPage(MainFrame):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-        
+    def init(self):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 

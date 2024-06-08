@@ -152,3 +152,10 @@ def update_card_item(product_id, card_id, quantity) -> CardItem:
         return True
     except:
         return False
+
+
+def clear_card(id):
+    query="delete from CardItems where card_id=?"
+    cursor.execute(query,[id])
+    sqliteConnection.commit()
+    return True

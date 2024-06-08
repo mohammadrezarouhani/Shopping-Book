@@ -28,13 +28,14 @@ class MainApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("Book Online Shop")
-        self.geometry("650x550")
+        self.geometry("800x600")
         self.resizable(0, 0)
+
         self.history = []
         self.logged_in = False
-
         self.user: Customer | Admin = None
-
+        self.current_order_id=None
+        
         style = ttk.Style(self)
         style.configure("Treeview", rowheight=40)
 
@@ -75,6 +76,12 @@ class MainApplication(tk.Tk):
         self.show_frame("StartPage")
 
     def show_frame(self, page_name):
+
+        if len(self.history) > 1:
+            prev = self.history[-1]
+            prev_frame = self.frames[prev]
+            prev_frame.clean()
+
         frame = self.frames[page_name]
         frame.grid(row=1, column=0, sticky=N + W + E + S)
         frame.update_data()

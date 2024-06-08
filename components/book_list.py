@@ -1,5 +1,3 @@
-from operator import index
-from ossaudiodev import control_labels
 import tkinter as tk
 from tkinter import (
     CENTER,
@@ -22,8 +20,7 @@ from database import *
 
 
 class BookListPage(MainFrame):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
+    def init(self):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
@@ -132,7 +129,6 @@ class BookListPage(MainFrame):
         )
         checkout_button.grid(row=0, column=1, sticky=E, padx=6)
 
-    def init(self):
         self.remove_from_tree()
         self.product_list = get_products()
         self.insert_book_item()
@@ -216,7 +212,7 @@ class BookListPage(MainFrame):
                 item = get_card_item(target_product_id, user.card.id)
 
                 if item:
-                    update_card_item(target_product_id, user.card.id, 1)
+                    update_card_item(target_product_id, user.card.id, item.quantity + 1)
                 else:
                     create_card_item(user.card.id, target_product_id, 1)
 

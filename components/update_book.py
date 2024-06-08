@@ -24,9 +24,7 @@ from .datetime_entry import DateEntry
 
 
 class UpdateBookPage(MainFrame):
-    def __init__(self, parent, controller):
-        super().__init__(parent, controller)
-
+    def init(self):
         st = ttk.Style()
         st.configure("C.Treeview", rowheight=18)
 

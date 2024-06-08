@@ -5,6 +5,8 @@ from database.category import create_category, update_category
 from database.product import create_product
 from faker import Faker
 
+from database.users import create_customer
+
 f = Faker()
 
 
@@ -597,4 +599,24 @@ def create_fake_category():
         )
 
 
-create_book()
+def create_fake_customer():
+    from faker import Faker
+
+    f = Faker()
+    for i in range(100):
+        create_customer(
+            f.user_name(),
+            f.first_name(),
+            f.last_name(),
+            f.password(),
+            f.address(),
+            f.city(),
+            f.state(),
+            f.zipcode(),
+            f.credit_card_provider(),
+            f.credit_card_number(),
+            f.credit_card_expire(),
+        )
+
+
+create_fake_customer()

@@ -670,9 +670,29 @@ def create_fake_order():
         )
 
 
+def update_publishers():
+    from faker import Faker
+
+    f = Faker()
+    pub_list = []
+
+    j = 0
+    for i in range(20):
+        pub_list.append(f.name_male())
+
+    for i in range(100):
+        j %= 20
+        cursor.execute("update Products set publisher=? where id=?", [pub_list[j],i+1])
+        sqliteConnection.commit()
+        j+=1
+
 # create_book()
 # create_fake_category()
 # create_fake_customer()
 # create_fake_admin()
 # create_fake_card()
 # create_fake_order()
+
+
+res=daily_customer_number_avg()
+pdb.set_trace()

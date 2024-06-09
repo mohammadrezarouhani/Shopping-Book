@@ -103,8 +103,8 @@ class Order:
     admin_id: Optional[int] = None
     amount: Optional[str] = None
     credit_card: Optional[str] = None
-    purchase_data:Optional[float]=None
-    deliver_data:Optional[float]=None
+    purchase_data: Optional[float] = None
+    deliver_data: Optional[float] = None
     order_item: List[OrderItem] = field(default_factory=list)
     customer: Optional[Customer] = None
 
@@ -133,3 +133,35 @@ class Author:
     product_id: int
     firstname: str
     lastname: str
+
+
+@dataclass
+class CategoryLastMonth:
+    title: str
+    amount: float
+
+
+@dataclass
+class CategoryRecordsNumber:
+    title: str
+    number: int
+
+
+@dataclass
+class TopSellers:
+    name: str
+    income: str
+
+@dataclass
+class ExpensiveBook:
+    category: str
+    book_title: str
+    price: str
+@dataclass
+class SaleCustomerAvg:
+    username:str
+    amount:str
+@dataclass
+class ProductNumPerSale:
+    title:str
+    number:int

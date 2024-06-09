@@ -1,11 +1,10 @@
 import pdb
-from tkinter import Button, Entry, Label, LabelFrame, StringVar, ttk
+from tkinter import Button, Entry, Label, LabelFrame, StringVar
 from tkinter import messagebox
 
 from database import Customer
 from database.users import (
     get_admin_by_id,
-    get_user,
     get_customer_by_id,
     update_admin,
     update_customer,

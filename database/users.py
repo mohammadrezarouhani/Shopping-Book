@@ -1,4 +1,5 @@
 import pdb
+from sqlite3 import IntegrityError
 import sys
 from traceback import format_exc
 from database.card import create_card, get_card
@@ -18,46 +19,53 @@ def create_customer(
     credit_card,
     credit_expire_date,
 ) -> Customer:
-    query = f"""
-        INSERT INTO Users (username, firstname, lastname, password, address, city, state,zip_code,role) 
-        VALUES (?, ?,?,?, ?, ?, ?,?,'customer');
-        """
-    print(query)
-    cursor.execute(
-        query, [username, firstname, lastname, password, address, city, state, zip_code]
-    )
-    sqliteConnection.commit()
-    user_id = cursor.lastrowid
-    print(["insert user result"], user_id)
+    try:
+        query = f"""
+            INSERT INTO Users (username, firstname, lastname, password, address, city, state,zip_code,role) 
+            VALUES (?, ?,?,?, ?, ?, ?,?,'customer');
+            """
+        print(query)
+        cursor.execute(
+            query,
+            [username, firstname, lastname, password, address, city, state, zip_code],
+        )
+        sqliteConnection.commit()
+        user_id = cursor.lastrowid
+        print(["insert user result"], user_id)
 
-    # create customer
-    query2 = f"INSERT INTO Customers (user_id,credit_type,credit_card,credit_expire_date) VALUES (?,?,?,?)"
-    print(query2)
+        # create customer
+        query2 = f"INSERT INTO Customers (user_id,credit_type,credit_card,credit_expire_date) VALUES (?,?,?,?)"
+        print(query2)
 
-    cursor.execute(query2, [user_id, credit_type, credit_card, credit_expire_date])
-    sqliteConnection.commit()
-    customer_id = cursor.lastrowid
+        cursor.execute(query2, [user_id, credit_type, credit_card, credit_expire_date])
+        sqliteConnection.commit()
+        customer_id = cursor.lastrowid
 
-    print("[customer insert id result]", customer_id)
-    card = create_card(user_id)
+        print("[customer insert id result]", customer_id)
+        card = create_card(user_id)
 
-    return Customer(
-        customer_id,
-        user_id,
-        credit_type,
-        credit_card,
-        credit_expire_date,
-        username,
-        firstname,
-        lastname,
-        password,
-        address,
-        city,
-        state,
-        zip_code,
-        "customer",
-        card,
-    )
+        return Customer(
+            customer_id,
+            user_id,
+            credit_type,
+            credit_card,
+            credit_expire_date,
+            username,
+            firstname,
+            lastname,
+            password,
+            address,
+            city,
+            state,
+            zip_code,
+            "customer",
+            card,
+        )
+    except IntegrityError as e:
+        raise e
+    except:
+        print(format_exc())
+        return False
 
 
 def update_customer(
@@ -142,7 +150,7 @@ def get_user(username, password) -> Customer | Admin:
         else:
             res = cursor.execute(f"SELECT * FROM Admins WHERE user_id=?", [user[0]])
             admin = res.fetchone()
-            return Admin(*admin,*user[1:])
+            return Admin(*admin, *user[1:])
     except:
         print(format_exc())
         return None

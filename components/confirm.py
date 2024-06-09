@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from mimetypes import init
 from operator import itemgetter
 import tkinter as tk
@@ -283,8 +284,16 @@ class ConfirmPage(MainFrame):
             messagebox.askquestion(title="finalize", message="Are you Sure To Proceed!")
             == "yes"
         ):
+            purchace_date = datetime.now(tz=timezone.utc)
+            deliver_date = purchace_date + timedelta(days=5)
+
             order = create_order(
-                self.user.user_id, str(self.total_price), self.user.credit_card, None
+                self.user.user_id,
+                str(self.total_price),
+                self.user.credit_card,
+                None,
+                deliver_date.timestamp(),
+                purchace_date.timestamp(),
             )
             if order:
                 clear_card(self.user.card.id)
@@ -292,4 +301,4 @@ class ConfirmPage(MainFrame):
                 self.controller.current_order_id = order.id
                 self.controller.show_frame("FactorPage")
             else:
-                messagebox.showinfo('error',"there is problem creating new order")
+                messagebox.showinfo("error", "there is problem creating new order")

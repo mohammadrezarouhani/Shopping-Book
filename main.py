@@ -1,6 +1,6 @@
 from email.mime import image
 import tkinter as tk
-from tkinter import E, N, S, W, Button, Frame, ttk
+from tkinter import E, N, S, W, Button, Frame, Menu, ttk
 from components import *
 from database import *
 
@@ -38,8 +38,8 @@ class MainApplication(tk.Tk):
         self.user: Customer | Admin = None
         self.current_order_id = None
         self.current_product_id = None
-        self.current_category=None
-        
+        self.current_category = None
+
         style = ttk.Style(self)
         style.configure("Treeview", rowheight=40)
 
@@ -49,26 +49,13 @@ class MainApplication(tk.Tk):
         container.rowconfigure(0, weight=0)
         container.rowconfigure(1, weight=1)
 
-        toolbar = Frame(container, height=5, background="lightblue")
-        toolbar.grid(row=0, column=0, padx=5, pady=5)
+        # menu_frame
+        menu_frame = Frame(container)
+        menu_frame.grid(row=0, column=0, sticky="wnes")
 
-        initil_page_button = Button(
-            toolbar,
-            text="main Page",
-            background="white",
-            foreground="green",
-            command=lambda: self.show_frame("StartPage"),
-        )
-        initil_page_button.grid(row=0, column=0, sticky=W, padx=5)
+        self.menu_bar = Menu(self)
+        self.config(menu=self.menu_bar)
 
-        search_page_button = Button(
-            toolbar,
-            text="Book List",
-            background="white",
-            foreground="green",
-            command=lambda: self.show_frame("BookListPage"),
-        )
-        search_page_button.grid(row=0, column=1, sticky=W, padx=5)
 
         self.frames = {}
 
@@ -90,7 +77,33 @@ class MainApplication(tk.Tk):
         frame.update_data()
         frame.tkraise()
         self.history.append(page_name)
+        self.set_menu()
 
+    def set_menu(self):
+
+        self.clear_menubar()
+        self.file = Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="File", menu=self.file)
+        self.file.add_command(label="Main Page", command=lambda:self.show_frame('StartPage'))
+        
+        if not self.logged_in:
+            self.file.add_command(label="Continue As Guest", command=lambda:self.show_frame('BookListPage'))
+            self.file.add_command(label="SignIn", command=lambda:self.show_frame('LoginPage'))
+            self.file.add_command(label="SignUp", command=lambda:self.show_frame('SignUpPage'))
+
+        elif type(self.user) == Customer:
+            self.file.add_command(label="Order New Book", command=lambda:self.show_frame('BookListPage'))
+            self.file.add_command(label="Profile", command=lambda:self.show_frame('UpdateProfile'))
+            self.file.add_command(label="Goto Card", command=lambda:self.show_frame('ShoppingCardPage'))
+
+        elif type(self.user) == Admin:
+            self.file.add_command(label="Mange Products", command=lambda:self.show_frame('ManageBookPage'))
+            self.file.add_command(label="Report", command=lambda:self.show_frame('BookOrderPage'))
+            self.file.add_command(label="System Maintanace", command=lambda:self.show_frame('SystemPage'))
+
+    def clear_menubar(self):
+        self.menu_bar = Menu(self)
+        self.config(menu=self.menu_bar)
 
 if __name__ == "__main__":
     app = MainApplication()

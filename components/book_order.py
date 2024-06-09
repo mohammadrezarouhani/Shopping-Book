@@ -1,9 +1,7 @@
-import pdb
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import (
     CENTER,
-    E,
     NO,
     RIGHT,
     Y,
@@ -17,13 +15,7 @@ from tkinter import (
 )
 
 from database.models import Admin
-from database.order import (
-    get_all_orders,
-    get_order_by_customer_username,
-    get_orders,
-    update_order,
-)
-from database.product import delete_product, filter_product, get_all_user_products
+from database import *
 
 from .main_frame import MainFrame
 
@@ -179,7 +171,7 @@ class BookOrderPage(MainFrame):
             == "yes"
         ):
             for item in self.order_tree.selection():
-                res = update_order(int(item), 1)
+                res = update_order(int(item), 1, self.user.user_id)
                 if not res:
                     break
             else:

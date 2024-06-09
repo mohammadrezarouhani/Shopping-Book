@@ -31,8 +31,8 @@ class BookListPage(MainFrame):
         # Search Frame
         search_frame = LabelFrame(self, text="Input")
         search_frame.pack(fill="x", expand="yes")
-        search_frame.columnconfigure(0, weight=1)
-        search_frame.columnconfigure(1, weight=1)
+        search_frame.columnconfigure(0, weight=0)
+        search_frame.columnconfigure(1, weight=0)
         search_frame.columnconfigure(2, weight=1)
 
         # create search label
@@ -41,32 +41,34 @@ class BookListPage(MainFrame):
             text="search by ISBN or title or publisher",
             font=("Arial", 10),
         )
-        search_label.grid(row=0, column=0, padx=10, pady=10)
+        search_label.grid(row=0, column=0, padx=5, pady=10)
 
         # create a entry labelo and biding text change event
         self.text_var = tk.StringVar()
-        search_entry = Entry(search_frame, textvariable=self.text_var)
-        search_entry.grid(row=0, column=1, padx=10, pady=10)
+        search_entry = Entry(
+            search_frame, textvariable=self.text_var, width=30, font=("Arial", 12)
+        )
+        search_entry.grid(row=0, column=1, padx=5, pady=10)
         # search_entry.bind("<KeyRelease>", self.search)
 
         search_button = Button(
             search_frame,
             text="Search",
-            width=6,
+            width=10,
             background="white",
             command=self.search,
         )
-        search_button.grid(row=0, column=2, sticky=W)
+        search_button.grid(row=0, column=2, sticky="e", padx=5)
 
         # create add to card button
         add_to_button = Button(
             search_frame,
             text="Add to Card",
-            width=8,
+            width=10,
             background="white",
             command=self.add_to_card,
         )
-        add_to_button.grid(row=0, column=3, sticky=W)
+        add_to_button.grid(row=0, column=3, sticky="e", padx=5)
 
         # creating a tree view
         tree_frame = Frame(self)

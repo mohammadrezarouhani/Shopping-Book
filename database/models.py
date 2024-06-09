@@ -103,6 +103,8 @@ class Order:
     admin_id: Optional[int] = None
     amount: Optional[str] = None
     credit_card: Optional[str] = None
+    purchase_data:Optional[float]=None
+    deliver_data:Optional[float]=None
     order_item: List[OrderItem] = field(default_factory=list)
     customer: Optional[Customer] = None
 

@@ -1,11 +1,8 @@
-from cgi import test
+from datetime import datetime, timedelta
 import random
-from database.card import create_card
-from database.category import create_category, update_category
-from database.product import create_product
 from faker import Faker
 
-from database.users import create_admin, create_customer
+from database import *
 
 f = Faker()
 
@@ -637,4 +634,45 @@ def create_fake_admin():
         )
 
 
-create_fake_admin()
+def create_fake_card():
+    for i in range(100):
+        create_card(i + 1)
+
+
+def create_fake_card_item():
+    for i in range(100):
+        for j in range(10):
+            create_card_item(i + 1, i + 1, random.randint(1, 20))
+
+
+def get_random_timestamp():
+    now = datetime.now()
+    two_months_ago = now - timedelta(days=60)
+    time_difference = now - two_months_ago
+    time_difference_seconds = time_difference.total_seconds()
+    random_seconds = random.uniform(0, time_difference_seconds)
+    purchase_date = two_months_ago + timedelta(seconds=random_seconds)
+    deliver_date = two_months_ago + timedelta(seconds=random_seconds, days=5)
+    return (purchase_date.timestamp(), deliver_date.timestamp())
+
+
+def create_fake_order():
+
+    for i in range(100):
+        purchase_date, deliver_date = get_random_timestamp()
+        create_order(
+            i + 1,
+            random.randint(5, 500),
+            random.randint(10**4, 10**8),
+            None,
+            deliver_date,
+            purchase_date,
+        )
+
+
+# create_book()
+# create_fake_category()
+# create_fake_customer()
+# create_fake_admin()
+# create_fake_card()
+# create_fake_order()

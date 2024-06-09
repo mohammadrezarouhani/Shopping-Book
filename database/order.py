@@ -27,12 +27,14 @@ def get_orders(id) -> Order:
         orders[0][3],
         orders[0][4],
         orders[0][5],
+        orders[0][6],
+        orders[0][7],
         order_item=[
             OrderItem(
-                *item[6:10],
+                *item[8:12],
                 Product(
-                    *item[10:20],
-                    category=Category(*item[20:]),
+                    *item[12:22],
+                    category=Category(*item[22:]),
                 ),
             )
             for item in orders
@@ -41,10 +43,10 @@ def get_orders(id) -> Order:
     )
 
 
-def update_order(id: int, submit: int) -> bool:
+def update_order(order_id: int, submit: int,admin_id) -> bool:
     try:
-        query = "update Orders set submit=? where id=?"
-        cursor.execute(query, [submit, id])
+        query = "update Orders set submit=?,admin_id=? where id=?"
+        cursor.execute(query, [submit, order_id,admin_id])
         sqliteConnection.commit()
         return True
     except:
@@ -52,12 +54,15 @@ def update_order(id: int, submit: int) -> bool:
         return False
 
 
-def create_order(user_id: int, amount: int, credit_card: str, admin_id) -> Order:
+def create_order(user_id: int, amount: int, credit_card: str, admin_id,deliver_date,purchace_date) -> Order:
     try:
         card = get_card(user_id)
-        query = f"""insert into Orders (user_id,submit,admin_id,amount,credit_card) values(?,?,?,?,?)"""
+        query = f"""
+            insert into Orders 
+            (user_id,submit,admin_id,amount,credit_card,deliver_date,purchase_date) values(?,?,?,?,?,?,?)
+        """
         print(query)
-        cursor.execute(query, [user_id, 0, admin_id, amount, credit_card])
+        cursor.execute(query, [user_id, 0, admin_id, amount, credit_card,deliver_date,purchace_date])
         sqliteConnection.commit()
         order_id = cursor.lastrowid
 

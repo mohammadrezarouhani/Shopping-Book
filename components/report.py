@@ -47,7 +47,15 @@ class ReportPage(MainFrame):
         #  a entry label and biding text change event
         self.text_var = tk.StringVar()
         report_type = ttk.Combobox(search_frame, width=15, textvariable=self.text_var)
-        report_type["values"] = ["total sale from alst month from each category", "total number of books in stock for each category", "KB"]
+        report_type.config(width=80)
+        report_type["values"] = [
+            "total sale from last month from each category",
+            "total number of books in stock for each category",
+            "list of top ten sellers in decending order from last three month",
+            "list of most expencive book from each category in descending order",
+            "for each category list teh total number of distinct buyers(as indetified byu their user name) in the last month",
+            "statistical report average amount of sale per customer lastmonth, average number of books per perchase transaction, average number of customers per day",
+        ]
         report_type.grid(row=0, column=1, padx=5, pady=10)
 
         #  add button
@@ -62,7 +70,7 @@ class ReportPage(MainFrame):
 
         # creating a tree view
         tree_frame = Frame(self)
-        tree_frame.pack(pady=20, fill="both", expand="yes",padx=20)
+        tree_frame.pack(pady=20, fill="both", expand="yes", padx=20)
 
         # adding scroll bar to tree view
         tree_scroll = Scrollbar(tree_frame)
@@ -96,7 +104,7 @@ class ReportPage(MainFrame):
 
         # set hedings
         self.category_tree.heading("Title", text="Title", anchor=CENTER)
-        self.category_tree.heading("State", text="Title", anchor=CENTER)
+        self.category_tree.heading("State", text="State", anchor=CENTER)
         self.category_tree.heading("Credit Type", text="Publisher", anchor=CENTER)
 
         # set tree tags
@@ -104,4 +112,22 @@ class ReportPage(MainFrame):
         self.category_tree.tag_configure("even", background="lightblue")
 
     def submit(self):
+        pass
+
+    def report_1(self):
+        pass
+
+    def report2(self):
+        pass
+
+    def report3(self):
+        pass
+
+    def report4(self):
+        pass
+
+    def report5(self):
+        pass
+
+    def report6(self):
         pass

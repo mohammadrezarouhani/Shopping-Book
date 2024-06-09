@@ -94,7 +94,7 @@ def create_card_table():
             (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER unique, 
-                FOREIGN KEY (user_id) REFERENCES Users(id)
+                FOREIGN KEY (user_id) REFERENCES Users(id) on delete cascade
             );
         """
     print(query)
@@ -110,7 +110,7 @@ def create_card_item_table():
                 product_id INTEGER,
                 card_id INTEGER,
                 quantity INTEGER,
-                FOREIGN KEY (product_id) REFERENCES Cards(id)
+                FOREIGN KEY (card_id) REFERENCES Cards(id) on delete cascade
                 FOREIGN KEY (product_id) REFERENCES Products(id)
             );
         """
@@ -127,8 +127,10 @@ def create_order_table():
                 user_id INTEGER,
                 submit INTEGER,
                 admin_id INTEGER,
-                amount str,
-                credit_card str,
+                amount varchar(115),
+                credit_card varchar(115),
+                purchase_date INTEGER,
+                deliver_date FLOAT,
                 FOREIGN KEY (user_id) REFERENCES Users(id)
                 FOREIGN KEY (admin_id) REFERENCES Admins(id)
             );
@@ -146,7 +148,7 @@ def create_order_item_table():
                 order_id INTEGER,
                 product_id INTEGER,
                 quantity INTEGER,
-                FOREIGN KEY (order_id) REFERENCES Orders(id)
+                FOREIGN KEY (order_id) REFERENCES Orders(id) on delete cascade
                 FOREIGN KEY (product_id) REFERENCES Products(id)
             );
         """
@@ -202,7 +204,7 @@ def create_author_table():
                 product_id INTEGER,
                 firstname varchar(115),
                 lastname varchar(115),
-                FOREIGN KEY (product_id) REFERENCES Products(id)
+                FOREIGN KEY (product_id) REFERENCES Products(id) on delete cascade
             );
         """
     print(query)
@@ -225,9 +227,6 @@ def create_category_table():
     print(f"[create category table result]: {res}")
 
 
-def create_transaction():
-    cursor.execute("DROP TABLE IF EXISTS Transactions;")
-
 
 def init_database():
     create_admin_table()
@@ -246,4 +245,4 @@ def init_database():
 
 
 if __name__ == "__main__":
-    init_database()
+    create_card_table()

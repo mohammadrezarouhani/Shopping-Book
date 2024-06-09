@@ -155,8 +155,8 @@ class TopSellers:
 @dataclass
 class ExpensiveBook:
     category: str
-    book_title: str
     price: str
+    book_title: str
 @dataclass
 class SaleCustomerAvg:
     username:str

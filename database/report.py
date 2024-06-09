@@ -85,7 +85,7 @@ def category_distinct_buyers() -> List[CategoryRecordsNumber]:
     return [CategoryRecordsNumber(*item) for item in reports]
 
 
-def avg_sale_per_customer():
+def avg_sale_per_customer() -> List[SaleCustomerAvg]:
     query = """SELECT 
             Users.username,
             AVG(Orders.amount) as sale_avg
@@ -100,7 +100,7 @@ def avg_sale_per_customer():
     return [SaleCustomerAvg(*item) for item in reports]
 
 
-def avg_number_of_book_per_sale() -> ProductNumPerSale:
+def avg_number_of_book_per_sale() -> List[ProductNumPerSale]:
     query = """
             SELECT 
             Products.title,

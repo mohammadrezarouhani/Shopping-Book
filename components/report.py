@@ -1,7 +1,5 @@
 from importlib.abc import ResourceReader
-import pdb
 import tkinter as tk
-from tkinter import OptionMenu, messagebox
 from tkinter import (
     CENTER,
     E,
@@ -17,9 +15,7 @@ from tkinter import (
     ttk,
 )
 
-from database.category import *
-from database.models import Admin
-
+from database import *
 from .main_frame import MainFrame
 
 
@@ -45,17 +41,22 @@ class ReportPage(MainFrame):
         search_label.grid(row=0, column=0, padx=5, pady=10)
 
         #  a entry label and biding text change event
-        self.text_var = tk.StringVar()
-        report_type = ttk.Combobox(search_frame, width=15, textvariable=self.text_var)
-        report_type.config(width=80)
-        report_type["values"] = [
+        self.report_option = [
             "total sale from last month from each category",
             "total number of books in stock for each category",
             "list of top ten sellers in decending order from last three month",
             "list of most expencive book from each category in descending order",
             "for each category list teh total number of distinct buyers(as indetified byu their user name) in the last month",
-            "statistical report average amount of sale per customer lastmonth, average number of books per perchase transaction, average number of customers per day",
+            "statistical report average amount of sale per customer lastmonth",
+            "average number of books per perchase transaction",
+            "average number of customers per day",
         ]
+        self.report_type = tk.StringVar()
+        report_type = ttk.Combobox(
+            search_frame, width=15, textvariable=self.report_type
+        )
+        report_type.config(width=80)
+        report_type["values"] = self.report_option
         report_type.grid(row=0, column=1, padx=5, pady=10)
 
         #  add button
@@ -77,57 +78,247 @@ class ReportPage(MainFrame):
         tree_scroll.pack(side=RIGHT, fill=Y)
 
         # creating tree view
-        self.category_tree = ttk.Treeview(
+        self.report_tree = ttk.Treeview(
             tree_frame,
             yscrollcommand=tree_scroll.set,
             selectmode="extended",
             show="headings",
             height=5,
         )
-        self.category_tree.pack(fill="both", expand=True)
+        self.report_tree.pack(fill="both", expand=True)
 
         # configure scrollbar
-        tree_scroll.config(command=self.category_tree.yview)
+        tree_scroll.config(command=self.report_tree.yview)
 
-        # set three headers
-        self.category_tree["columns"] = (
+    def submit(self):
+        self.clear_tree()
+        if self.report_type.get() == self.report_option[0]:
+            self.report_1()
+
+        elif self.report_type.get() == self.report_option[1]:
+            self.report2()
+
+        elif self.report_type.get() == self.report_option[2]:
+            self.report3()
+
+        elif self.report_type.get() == self.report_option[3]:
+            self.report4()
+
+        elif self.report_type.get() == self.report_option[4]:
+            self.report5()
+
+        elif self.report_type.get() == self.report_option[5]:
+            self.report6()
+
+        elif self.report_type.get() == self.report_option[6]:
+            self.report7()
+
+        elif self.report_type.get() == self.report_option[7]:
+            self.report8()
+
+    def report_1(self):
+        self.report_tree["columns"] = (
             "Title",
-            "State",
-            "Credit Type",
+            "Amount",
         )
 
         # set tree columns
-        self.category_tree.column("#0", width=0, stretch=NO)
-        self.category_tree.column("Title", anchor=CENTER, width=100)
-        self.category_tree.column("State", anchor=CENTER, width=130)
-        self.category_tree.column("Credit Type", anchor=CENTER, width=130)
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column("Title", anchor=CENTER, width=100)
+        self.report_tree.column("Amount", anchor=CENTER, width=130)
 
         # set hedings
-        self.category_tree.heading("Title", text="Title", anchor=CENTER)
-        self.category_tree.heading("State", text="State", anchor=CENTER)
-        self.category_tree.heading("Credit Type", text="Publisher", anchor=CENTER)
+        self.report_tree.heading("Title", text="Title", anchor=CENTER)
+        self.report_tree.heading("Amount", text="Amount", anchor=CENTER)
 
         # set tree tags
-        self.category_tree.tag_configure("odd", background="white")
-        self.category_tree.tag_configure("even", background="lightblue")
-
-    def submit(self):
-        pass
-
-    def report_1(self):
-        pass
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        data = [(d.title, d.amount) for d in total_sale_for_each_category()]
+        self.insert_table(data)
 
     def report2(self):
-        pass
+        self.report_tree["columns"] = (
+            "Title",
+            "Number",
+        )
+
+        # set tree columns
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column("Title", anchor=CENTER, width=100)
+        self.report_tree.column("Number", anchor=CENTER, width=130)
+
+        # set hedings
+        self.report_tree.heading("Title", text="Title", anchor=CENTER)
+        self.report_tree.heading("Number", text="Number", anchor=CENTER)
+
+        # set tree tags
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        data = [(d.title, d.number) for d in total_number_of_category_book()]
+        self.insert_table(data)
 
     def report3(self):
-        pass
+        self.report_tree["columns"] = (
+            "Name",
+            "Income",
+        )
+
+        # set tree columns
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column("Name", anchor=CENTER, width=100)
+        self.report_tree.column("Income", anchor=CENTER, width=130)
+
+        # set hedings
+        self.report_tree.heading("Name", text="Name", anchor=CENTER)
+        self.report_tree.heading("Income", text="Income", anchor=CENTER)
+
+        # set tree tags
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        data = [(d.name, d.income) for d in top_ten_best_seller()]
+        self.insert_table(data)
 
     def report4(self):
-        pass
+        self.report_tree["columns"] = (
+            "Category",
+            "Title",
+            "Price",
+        )
+
+        # set tree columns
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column("Category", anchor=CENTER, width=100)
+        self.report_tree.column("Title", anchor=CENTER, width=130)
+        self.report_tree.column("Price", anchor=CENTER, width=130)
+
+        # set hedings
+        self.report_tree.heading("Category", text="Category", anchor=CENTER)
+        self.report_tree.heading("Title", text="Title", anchor=CENTER)
+        self.report_tree.heading("Price", text="Price", anchor=CENTER)
+
+        # set tree tags
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        data = [(d.category, d.book_title, d.price) for d in most_expecive_books()]
+        self.insert_table(data)
 
     def report5(self):
-        pass
+        self.report_tree["columns"] = (
+            "Title",
+            "Number",
+        )
+
+        # set tree columns
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column("Title", anchor=CENTER, width=130)
+        self.report_tree.column("Number", anchor=CENTER, width=130)
+
+        # set hedings
+        self.report_tree.heading("Title", text="Title", anchor=CENTER)
+        self.report_tree.heading("Number", text="Number", anchor=CENTER)
+
+        # set tree tags
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        data = [(d.title, d.number) for d in category_distinct_buyers()]
+        self.insert_table(data)
 
     def report6(self):
-        pass
+        self.report_tree["columns"] = (
+            "Username",
+            "Amount",
+        )
+
+        # set tree columns
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column("Username", anchor=CENTER, width=130)
+        self.report_tree.column("Amount", anchor=CENTER, width=130)
+
+        # set hedings
+        self.report_tree.heading("Username", text="Username", anchor=CENTER)
+        self.report_tree.heading("Amount", text="Amount", anchor=CENTER)
+
+        # set tree tags
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        data = [(d.username, d.amount) for d in avg_sale_per_customer()]
+        self.insert_table(data)
+
+    def report7(self):
+        self.report_tree["columns"] = (
+            "Title",
+            "Number",
+        )
+
+        # set tree columns
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column("Title", anchor=CENTER, width=130)
+        self.report_tree.column("Number", anchor=CENTER, width=130)
+
+        # set hedings
+        self.report_tree.heading("Title", text="Title", anchor=CENTER)
+        self.report_tree.heading("Number", text="Number", anchor=CENTER)
+
+        # set tree tags
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        data = [(d.title, d.number) for d in avg_number_of_book_per_sale()]
+        self.insert_table(data)
+
+    def report8(self):
+        self.report_tree["columns"] = ("Average Customer From Last Month",)
+
+        # set tree columns
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column(
+            "Average Customer From Last Month", anchor=CENTER, width=130
+        )
+
+        # set hedings
+        self.report_tree.heading(
+            "Average Customer From Last Month",
+            text="Average Customer From Last Month",
+            anchor=CENTER,
+        )
+
+        # set tree tags
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        self.insert_single_data_to_table(daily_customer_number_avg())
+
+    def insert_table(self, items):
+        for index, item in enumerate(items):
+            if index % 2 == 0:
+                self.report_tree.insert(
+                    parent="",
+                    index="end",
+                    iid=index,
+                    text="",
+                    values=item,
+                    tags="odd",
+                )
+
+            else:
+                self.report_tree.insert(
+                    parent="",
+                    index="end",
+                    iid=index,
+                    text="",
+                    values=item,
+                    tags="even",
+                )
+
+    def insert_single_data_to_table(self, item):
+        self.report_tree.insert(
+            parent="",
+            index="end",
+            iid=0,
+            text="",
+            values=item,
+            tags="odd",
+        )
+
+    def clear_tree(self):
+        for record in self.report_tree.get_children():
+            self.report_tree.delete(record)

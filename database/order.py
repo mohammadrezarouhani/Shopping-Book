@@ -43,10 +43,10 @@ def get_orders(id) -> Order:
     )
 
 
-def update_order(order_id: int, submit: int,admin_id) -> bool:
+def update_order(order_id: int, submit: int, admin_id) -> bool:
     try:
         query = "update Orders set submit=?,admin_id=? where id=?"
-        cursor.execute(query, [submit, order_id,admin_id])
+        cursor.execute(query, [submit, admin_id, order_id])
         sqliteConnection.commit()
         return True
     except:
@@ -54,7 +54,9 @@ def update_order(order_id: int, submit: int,admin_id) -> bool:
         return False
 
 
-def create_order(user_id: int, amount: int, credit_card: str, admin_id,deliver_date,purchace_date) -> Order:
+def create_order(
+    user_id: int, amount: int, credit_card: str, admin_id, deliver_date, purchace_date
+) -> Order:
     try:
         card = get_card(user_id)
         query = f"""
@@ -62,7 +64,10 @@ def create_order(user_id: int, amount: int, credit_card: str, admin_id,deliver_d
             (user_id,submit,admin_id,amount,credit_card,deliver_date,purchase_date) values(?,?,?,?,?,?,?)
         """
         print(query)
-        cursor.execute(query, [user_id, 0, admin_id, amount, credit_card,deliver_date,purchace_date])
+        cursor.execute(
+            query,
+            [user_id, 0, admin_id, amount, credit_card, deliver_date, purchace_date],
+        )
         sqliteConnection.commit()
         order_id = cursor.lastrowid
 
@@ -101,7 +106,7 @@ def get_all_orders() -> List[MainOrder]:
     query = f"""
         select * from Orders
         inner join Customers on Orders.user_id=Customers.user_id
-        inner join Users on Customers.user_id=Users.id
+        inner join Users on Customers.user_id=Users.id order by cast(Orders.amount as float) desc
     """
     print(query)
     res = cursor.execute(query)
@@ -109,7 +114,7 @@ def get_all_orders() -> List[MainOrder]:
     order_list = []
 
     for order in orders:
-        order_list.append(MainOrder(*order[0:6], Customer(*order[6:11], *order[12:])))
+        order_list.append(MainOrder(*order[0:8], Customer(*order[8:13], *order[14:])))
     return order_list
 
 
@@ -119,12 +124,13 @@ def get_order_by_customer_username(username) -> List[MainOrder]:
         inner join Customers on Orders.user_id=Customers.user_id
         inner join Users on Customers.user_id=Users.id
         where Users.username like ?
+        order by cast(Orders.amount as float) desc
     """
     print(query)
     res = cursor.execute(query, [username + "%"])
     orders = res.fetchall()
     order_list = []
     for order in orders:
-        order_list.append(MainOrder(*order[0:6], Customer(*order[6:11], *order[12:])))
+        order_list.append(MainOrder(*order[0:8], Customer(*order[8:13], *order[14:])))
 
     return order_list

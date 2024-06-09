@@ -18,7 +18,12 @@ from tkinter import (
 )
 
 from database.models import Admin
-from database.product import delete_product, filter_product, get_all_user_products
+from database.product import (
+    delete_product,
+    filter_product,
+    get_all_user_products,
+    manger_filter_book,
+)
 
 from .main_frame import MainFrame
 
@@ -164,7 +169,7 @@ class ManageBookPage(MainFrame):
                         p.title,
                         p.publisher,
                         p.price,
-                        bool(p.deleted == -1),
+                        "True" if p.deleted else "False",
                     ),
                     tags="odd",
                 )
@@ -180,7 +185,7 @@ class ManageBookPage(MainFrame):
                         p.title,
                         p.publisher,
                         p.price,
-                        bool(p.deleted == -1),
+                        "True" if p.deleted else "False",
                     ),
                     tags="even",
                 )
@@ -188,7 +193,7 @@ class ManageBookPage(MainFrame):
     def search(self, *args):
         """query to data base for filtering"""
         print(f"Text changed to: {self.text_var.get()}")
-        self.products = filter_product(self.text_var.get())
+        self.products = manger_filter_book(self.text_var.get(), self.user.user_id)
         self.clean_table()
         self.insert_book_item()
 

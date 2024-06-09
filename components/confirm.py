@@ -266,18 +266,6 @@ class ConfirmPage(MainFrame):
                     tags="even",
                 )
 
-    def search(self, *args):
-        """query to data base for filtering"""
-        print(f"Text changed to: {self.text_var.get()}")
-
-    def add_to_card(self):
-        for item in self.book_tree.selection():
-            item_text = self.book_tree.item(item, "values")
-            print(item_text)
-
-    def remove_from_tree(self):
-        for record in self.book_tree.get_children():
-            self.book_tree.delete(record)
 
     def final(self):
         if (

@@ -66,18 +66,26 @@ def create_product(
 
 
 def update_product(
-    id, category_id, title, publisher, price, quantity, year, authors: List[str]
+    id,
+    category_id,
+    title,
+    publisher,
+    price,
+    quantity,
+    year,
+    authors: List[str],
+    deleted,
 ) -> bool:
     try:
         query = f"""
                     update Products set category_id=?, title=?,
-                    publisher=?,price=?,quantity=?,year=?
+                    publisher=?,price=?,quantity=?,year=?,deleted=?
                     where id=?
                 """
         print(query)
         cursor.execute(
             query,
-            [category_id, title, publisher, price, quantity, year, id],
+            [category_id, title, publisher, price, quantity, year, deleted, id],
         )
         sqliteConnection.commit()
 
@@ -130,7 +138,7 @@ def get_all_products():
         query = """
             SELECT * FROM Products
             INNER JOIN Categoreis ON Products.category_id = Categoreis.id
-            WHERE Products.deleted=0 
+            WHERE Products.deleted=0 AND Products.quantity > 0
         """
         print(query)
         res = cursor.execute(query)
@@ -196,10 +204,33 @@ def filter_product(sr) -> List[Product]:
             SELECT * FROM Products
             INNER JOIN Categoreis ON Products.category_id = Categoreis.id
             WHERE Products.deleted=0 
-            AND (Products.isbn LIKE ? OR Products.title LIKE ? OR Products.publisher LIKE ?)
+            AND (Products.isbn LIKE ? OR Products.title LIKE ? OR Products.publisher LIKE ?) AND Products.quantity > 0
         """
         print(query)
         res = cursor.execute(query, [sr, sr, sr])
+
+        return [
+            Product(
+                *item[0:10],
+                Category(*item[10:]),
+            )
+            for item in res.fetchall()
+        ]
+    except:
+        print(format_exc())
+        return False
+
+
+def manger_filter_book(sr, user_id):
+    sr += "%"
+    try:
+        query = """
+            SELECT * FROM Products
+            INNER JOIN Categoreis ON Products.category_id = Categoreis.id
+            WHERE (Products.isbn LIKE ? OR Products.title LIKE ? OR Products.publisher LIKE ?) AND Products.user_id=?
+        """
+        print(query)
+        res = cursor.execute(query, [sr, sr, sr, user_id])
 
         return [
             Product(
@@ -247,7 +278,7 @@ def update_product_quantity(id, quantity):
 
 def delete_product(id):
     try:
-        query = "update Products set deleted=-1 where id=?"
+        query = "update Products set deleted=1 where id=?"
         cursor.execute(query, [id])
         sqliteConnection.commit()
         return True

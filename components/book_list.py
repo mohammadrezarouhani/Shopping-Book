@@ -200,7 +200,7 @@ class BookListPage(MainFrame):
                         break
 
                 # if index create new item else update old item
-                if pointer < 0:
+                if pointer < 0 and product.quantity > 0:
                     new_item = CardItem(0, target_product_id, 0, 1, product)
                     user.card.card_items.append(new_item)
                     print("[Added]:", new_item)
@@ -214,10 +214,10 @@ class BookListPage(MainFrame):
             else:
                 item = get_card_item(target_product_id, user.card.id)
 
-                if item:
-                    update_card_item(target_product_id, user.card.id, item.quantity + 1)
-                else:
+                if not item and product.quantity > 1:
                     create_card_item(user.card.id, target_product_id, 1)
+                elif item and product.quantity > item.quantity + 1:
+                    update_card_item(target_product_id, user.card.id, item.quantity + 1)
 
                 self.controller.user.card = get_card(user.id)
 

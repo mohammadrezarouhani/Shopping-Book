@@ -1,4 +1,5 @@
 import pdb
+from tkinter.tix import Select
 from typing import List
 import tkinter as tk
 from tkinter import (
@@ -65,6 +66,18 @@ class UpdateBookPage(MainFrame):
         title_entry = Entry(top_frame, textvariable=self.title, font=("Arial", 10))
         title_label.grid(row=0, column=2, padx=5)
         title_entry.grid(row=0, column=3, pady=5)
+
+        # deleted
+        deleted_label = Label(top_frame, text="Deleted:", width=15)
+        self.deleted = StringVar()
+        self.deleted.set('True' if self.product.deleted else 'False')
+
+        deleted_select = ttk.Combobox(
+            top_frame, textvariable=self.deleted, font=("Arial", 10)
+        )
+        deleted_select["values"] = ["True", "False"]
+        deleted_label.grid(row=0, column=4, padx=5)
+        deleted_select.grid(row=0, column=5, pady=5)
 
         ### Authors frame
         author_frame = LabelFrame(self, text="Author(s)", font=("Arial", 12, "bold"))
@@ -145,7 +158,7 @@ class UpdateBookPage(MainFrame):
 
         author = get_author_by_product(self.product.id)
         self.add_custom_author(author)
-        
+
         # Publisher
         publisher_label = Label(address_frame, text="Publisher", width=10)
         self.publisher = StringVar()
@@ -259,7 +272,6 @@ class UpdateBookPage(MainFrame):
                 )
                 break
 
-            user: Admin = self.controller.user
             category = get_category_by_title(self.category_title.get())
             author_list = []
 
@@ -276,6 +288,7 @@ class UpdateBookPage(MainFrame):
                 int(self.quantity.get()),
                 self.year.get(),
                 author_list,
+                int(self.deleted.get() == "True"),
             )
 
             if res:

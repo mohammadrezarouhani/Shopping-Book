@@ -98,7 +98,7 @@ class MainApplication(tk.Tk):
 
         elif type(self.user) == Admin:
             self.file.add_command(label="Mange Products", command=lambda:self.show_frame('ManageBookPage'))
-            self.file.add_command(label="Report", command=lambda:self.show_frame('BookOrderPage'))
+            self.file.add_command(label="Report", command=lambda:self.show_frame('ReportPage'))
             self.file.add_command(label="System Maintanace", command=lambda:self.show_frame('SystemPage'))
 
     def clear_menubar(self):

@@ -117,6 +117,8 @@ class MainOrder:
     admin_id: Optional[int] = None
     amount: Optional[str] = None
     credit_card: Optional[str] = None
+    purchase_data: Optional[float] = None
+    deliver_data: Optional[float] = None
     customer: Optional[Customer] = None
 
 

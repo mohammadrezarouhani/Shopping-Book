@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import Button, Entry, Frame, Label, StringVar
+from tkinter import messagebox
 from tkinter.ttk import Combobox
 
 from database import *
@@ -82,3 +83,5 @@ class LoginPage(MainFrame):
             self.controller.user = new_user
             prev = self.controller.history[-2]
             self.controller.show_frame(prev)
+        else:
+            messagebox.showerror('error','no account with this username and password!')

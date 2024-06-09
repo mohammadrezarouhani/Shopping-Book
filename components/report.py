@@ -278,7 +278,7 @@ class ReportPage(MainFrame):
         # set hedings
         self.report_tree.heading(
             "Average Customer From Last Month",
-            text="Average Customer From Last Month",
+            text="Average Sale Number In 30 days",
             anchor=CENTER,
         )
 

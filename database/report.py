@@ -12,6 +12,7 @@ def total_sale_for_each_category() -> List[CategoryLastMonth]:
         INNER JOIN Orders ON OrderItems.order_id = Orders.id
         where strftime('%d-%m-%Y', datetime(Orders.purchase_date, 'unixepoch')) > datetime('now','-1 month')
         GROUP BY Categoreis.title   
+        ORDER BY CAST(total_value AS FLOAT) DESC
         """
 
     res = cursor.execute(query)
@@ -26,6 +27,7 @@ def total_number_of_category_book() -> List[CategoryRecordsNumber]:
             Count(Products.id) as book_number
             FROM Products JOIN Categoreis ON Categoreis.id=Products.category_id  
             GROUP BY Categoreis.title
+            ORDER BY CAST(book_number AS INT) DESC
         """
 
     res = cursor.execute(query)
@@ -44,7 +46,8 @@ def top_ten_best_seller() -> List[TopSellers]:
         INNER JOIN Categoreis ON Categoreis.id = Products.category_id
         INNER JOIN Orders ON OrderItems.order_id = Orders.id
         where strftime('%d-%m-%Y', datetime(Orders.purchase_date, 'unixepoch')) > datetime('now','-3 month')
-        GROUP BY Products.publisher LIMIT 10
+        GROUP BY Products.publisher
+        ORDER BY CAST(total_value AS INT) DESC  LIMIT 10
         """
 
     res = cursor.execute(query)
@@ -58,7 +61,8 @@ def most_expecive_books() -> List[ExpensiveBook]:
             SELECT 
             Categoreis.title ,MAX(CAST(Products.price AS FLOAT)) as price,Products.title  from Products 
             INNER JOIN Categoreis ON Categoreis.id=Products.category_id 
-            GROUP BY Categoreis.title ORDER BY price DESC
+            GROUP BY Categoreis.title
+            ORDER BY CAST(price AS INT) DESC
         """
 
     res = cursor.execute(query)
@@ -77,7 +81,9 @@ def category_distinct_buyers() -> List[CategoryRecordsNumber]:
             INNER JOIN Orders ON OrderItems.order_id = Orders.id
             INNER JOIN Users on Users.id=Orders.user_id
             where strftime('%d-%m-%Y', datetime(Orders.purchase_date, 'unixepoch')) > datetime('now','-1 month')
-            GROUP BY Categoreis.title LIMIT 10"""
+            GROUP BY Categoreis.title 
+            ORDER BY CAST(user_count AS INT) DESC LIMIT 10
+            """
 
     res = cursor.execute(query)
     reports = res.fetchall()
@@ -92,7 +98,9 @@ def avg_sale_per_customer() -> List[SaleCustomerAvg]:
             FROM Orders
             INNER JOIN Users on Users.id=Orders.user_id
             where strftime('%d-%m-%Y', datetime(Orders.purchase_date, 'unixepoch')) > datetime('now','-1 month')
-            GROUP BY Users.id ORDER BY sale_avg DESC """
+            GROUP BY Users.id 
+            ORDER BY CAST(sale_avg AS FLOAT) DESC
+            """
 
     res = cursor.execute(query)
     reports = res.fetchall()
@@ -110,6 +118,7 @@ def avg_number_of_book_per_sale() -> List[ProductNumPerSale]:
             INNER JOIN Products on Products.id=OrderItems.product_id
             where strftime('%d-%m-%Y', datetime(Orders.purchase_date, 'unixepoch')) > datetime('now','-1 month')
             GROUP BY Products.id 
+            ORDER BY CAST(product_number AS INT) DESC
         """
 
     res = cursor.execute(query)

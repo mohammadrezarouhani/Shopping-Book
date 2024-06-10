@@ -33,8 +33,8 @@ class ReportPage(MainFrame):
         search_frame.pack(fill="x", expand="yes")
 
         search_frame.columnconfigure(0, weight=0)
-        search_frame.columnconfigure(1, weight=0)
-        search_frame.columnconfigure(2, weight=1)
+        search_frame.columnconfigure(1, weight=1)
+        search_frame.columnconfigure(2, weight=0)
 
         # search label
         search_label = Label(search_frame, text="search category by title")
@@ -53,18 +53,18 @@ class ReportPage(MainFrame):
         ]
         self.report_type = tk.StringVar()
         report_type = ttk.Combobox(
-            search_frame, width=15, textvariable=self.report_type
+            search_frame, textvariable=self.report_type,width=5
         )
         report_type.config(width=80)
         report_type["values"] = self.report_option
-        report_type.grid(row=0, column=1, padx=5, pady=10)
+        report_type.grid(row=0, column=1,sticky='w')
 
         #  add button
         search_button = Button(
             search_frame,
             text="Submit",
             background="white",
-            width=15,
+            width=5,
             command=self.submit,
         )
         search_button.grid(row=0, column=2, padx=5, pady=10, sticky="e")

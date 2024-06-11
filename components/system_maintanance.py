@@ -98,7 +98,7 @@ class SystemPage(MainFrame):
         # set hedings
         self.category_tree.heading("Title", text="Title", anchor=CENTER)
         self.category_tree.heading("State", text="Title", anchor=CENTER)
-        self.category_tree.heading("Credit Type", text="Publisher", anchor=CENTER)
+        self.category_tree.heading("Credit Type", text="Credit Type", anchor=CENTER)
 
         # set tree tags
         self.category_tree.tag_configure("odd", background="white")

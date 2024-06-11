@@ -36,7 +36,7 @@ class ConfirmPage(MainFrame):
             self.top_frame.columnconfigure(0, weight=1)
             self.top_frame.columnconfigure(1, weight=1)
             self.user: Customer = self.controller.user
-            self.card_items: List[CardItem] = self.user.card.card_items
+            self.card_items: List[CardItem] = get_card(self.user.id).card_items
             self.sub_total_price = sum(
                 [item.quantity * float(item.product.price) for item in self.card_items]
             )
@@ -265,7 +265,6 @@ class ConfirmPage(MainFrame):
                     ),
                     tags="even",
                 )
-
 
     def final(self):
         if (

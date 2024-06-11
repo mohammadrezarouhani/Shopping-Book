@@ -236,7 +236,6 @@ class FactorPage(MainFrame):
                     iid=item.id,
                     text="",
                     values=(
-                        index,
                         item.product.isbn,
                         item.product.title,
                         item.product.publisher,

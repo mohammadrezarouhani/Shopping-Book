@@ -694,5 +694,5 @@ def update_publishers():
 # create_fake_order()
 
 
-res=daily_customer_number_avg()
+res=sale_per_month_of_year()
 pdb.set_trace()

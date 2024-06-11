@@ -214,11 +214,13 @@ class BookListPage(MainFrame):
             else:
                 item = get_card_item(target_product_id, user.card.id)
 
-                if not item and product.quantity > 1:
+                if not item and product.quantity > 0:
                     create_card_item(user.card.id, target_product_id, 1)
-                elif item and product.quantity > item.quantity + 1:
+                elif item and product.quantity >= item.quantity + 1:
                     update_card_item(target_product_id, user.card.id, item.quantity + 1)
-
+                else:
+                    messagebox.showerror(title="error", message="not enough in stock!")
+                    
                 self.controller.user.card = get_card(user.id)
 
             self.card_label.config(

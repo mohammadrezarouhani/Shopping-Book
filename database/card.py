@@ -59,18 +59,13 @@ def create_card_item(card_id, product_id, quantity) -> CardItem | bool:
         return False
 
 
-def delete_card_item(item_id, card_id) -> List[CardItem]:
+def delete_card_item(item_id) -> List[CardItem]:
     try:
         query = f"delete from CardItems where id={item_id}"
         cursor.execute(query)
         sqliteConnection.commit()
-        card_id = cursor.lastrowid
+        return True
 
-        query2 = f"select * from CardItems where card_id={card_id}"
-        res = cursor.execute(query)
-        items = res.fetchall()
-
-        return [CardItem(*item[0:]) for item in items]
     except:
         print(format_exc())
         return False

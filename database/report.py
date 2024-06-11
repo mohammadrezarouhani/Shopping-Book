@@ -144,3 +144,22 @@ def daily_customer_number_avg() -> int:
     if report:
         return report[0]
     return None
+
+
+
+def sale_per_month_of_year():
+    query="""
+        SELECT 
+        strftime("%m-%Y",datetime(Orders.purchase_date,'unixepoch')) as month,
+        CAST(SUM(Products.price*OrderItems.quantity) AS INT)
+        FROM Orders 
+        INNER JOIN OrderItems on OrderItems.order_id=Orders.id
+        INNER JOIN Products on Products.id=OrderItems.product_id
+        INNER JOIN  Categoreis on Categoreis.id=Products.category_id
+        GROUP BY strftime("%m-%Y",datetime(Orders.purchase_date,'unixepoch'))
+        ORDER BY strftime("%m-%Y",datetime(Orders.purchase_date,'unixepoch'))
+        """
+    res=cursor.execute(query)
+    items=res.fetchall()
+    
+    return [(SalePerMonth(*item))for item in items]

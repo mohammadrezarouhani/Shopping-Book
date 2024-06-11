@@ -50,14 +50,13 @@ class ReportPage(MainFrame):
             "statistical report average amount of sale per customer lastmonth",
             "average number of books per perchase transaction",
             "average number of customers per day",
+            "sale per month of year ",
         ]
         self.report_type = tk.StringVar()
-        report_type = ttk.Combobox(
-            search_frame, textvariable=self.report_type,width=5
-        )
+        report_type = ttk.Combobox(search_frame, textvariable=self.report_type, width=5)
         report_type.config(width=80)
         report_type["values"] = self.report_option
-        report_type.grid(row=0, column=1,sticky='w')
+        report_type.grid(row=0, column=1, sticky="w")
 
         #  add button
         search_button = Button(
@@ -115,6 +114,9 @@ class ReportPage(MainFrame):
 
         elif self.report_type.get() == self.report_option[7]:
             self.report8()
+
+        elif self.report_type.get() == self.report_option[8]:
+            self.report9()
 
     def report_1(self):
         self.report_tree["columns"] = (
@@ -286,6 +288,25 @@ class ReportPage(MainFrame):
         self.report_tree.tag_configure("odd", background="white")
         self.report_tree.tag_configure("even", background="lightblue")
         self.insert_single_data_to_table(daily_customer_number_avg())
+
+    def report9(self):
+        self.report_tree["columns"] = ("month", "price")
+
+        # set tree columns
+        self.report_tree.column("#0", width=0, stretch=NO)
+        self.report_tree.column("month", anchor=CENTER, width=130)
+        self.report_tree.column("price", anchor=CENTER, width=130)
+
+        # set hedings
+        self.report_tree.heading("month", text="month", anchor=CENTER)
+        self.report_tree.heading("price", text="price", anchor=CENTER)
+
+        # set tree tags
+        self.report_tree.tag_configure("odd", background="white")
+        self.report_tree.tag_configure("even", background="lightblue")
+        self.insert_table(
+            [(item.month, item.price) for item in sale_per_month_of_year()]
+        )
 
     def insert_table(self, items):
         for index, item in enumerate(items):

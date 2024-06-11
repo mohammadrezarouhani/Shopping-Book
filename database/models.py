@@ -166,4 +166,10 @@ class SaleCustomerAvg:
 @dataclass
 class ProductNumPerSale:
     title:str
-    number:int
+    number:str
+    
+
+@dataclass
+class SalePerMonth:
+    month:str
+    price:str

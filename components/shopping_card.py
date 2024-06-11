@@ -1,5 +1,4 @@
 from re import X
-import tkinter as tk
 from tkinter import (
     CENTER,
     E,
@@ -7,7 +6,6 @@ from tkinter import (
     RIGHT,
     Y,
     Button,
-    Entry,
     Frame,
     Label,
     LabelFrame,
@@ -16,7 +14,7 @@ from tkinter import (
 )
 from tkinter import messagebox
 
-from database.models import Card
+from database import *
 
 from .main_frame import MainFrame
 
@@ -109,7 +107,7 @@ class ShoppingCardPage(MainFrame):
             action_frame,
             text="Delete",
             background="white",
-            command=self.remove_from_tree,
+            command=self.remove_selected_items,
             width=10,
         )
         del_button.pack(side="right", padx=5)
@@ -123,7 +121,7 @@ class ShoppingCardPage(MainFrame):
                 self.card_tree.insert(
                     parent="",
                     index="end",
-                    iid=index,
+                    iid=item.id,
                     text="",
                     values=(
                         item.product.isbn,
@@ -139,7 +137,7 @@ class ShoppingCardPage(MainFrame):
                 self.card_tree.insert(
                     parent="",
                     index="end",
-                    iid=index,
+                    iid=item.id,
                     text="",
                     values=(
                         item.product.isbn,
@@ -171,8 +169,12 @@ class ShoppingCardPage(MainFrame):
             for item in selection:
                 self.card_tree.delete(item)
 
-        if self.controller.logged_in:
-            pass
+                if self.controller.logged_in:
+                    delete_card_item(int(item))
+
+            self.remove_from_tree()
+            self.card: Card = get_card(self.controller.user.id)
+            self.insert_book_item()
 
     def checkout(self):
         if self.controller.logged_in:
